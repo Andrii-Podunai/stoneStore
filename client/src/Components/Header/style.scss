@@ -1,0 +1,31 @@
+a{
+    
+    margin: 10px;
+}
+.linkTitle{ 
+   text-decoration: none; 
+   color: black;
+}
+.Header {
+    margin-bottom: 30px;
+    height: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(177, 177 ,177,0.5);
+    &-logo{ 
+        width: 30%;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
+    &-nav{ 
+        align-items: center;
+        width: 50%;
+        display: flex;
+        justify-content: space-evenly;
+    }
+}
+Button{ 
+    margin: 10px;
+}
