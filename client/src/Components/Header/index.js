@@ -6,34 +6,36 @@ import logo from './logo.png';
 function Header() {
   return (
     <header className="Header">
-      <div className="Header-logo">
-        <Link to="/" className="navbar-brand">
-          <img src={logo} alt="logo" className="card-img" />
-        </Link>
-      </div>
-      <div className="Header-nav">
-        <form className="d-flex" role="search">
-          <input
-            className="form-control me-2"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-          />
-          <button className="btn btn-outline-success" type="submit">
-            Search
-          </button>
-        </form>
-        <div className="Header-nav--btn">
-          <Link to="/" className="linkLog">
-            <button type="button" className="btn btn-outline-success">
-              Log in
-            </button>
+      <div className="Header-container">
+        <div className="Header-logo">
+          <Link to="/" className="navbar-brand">
+            <img src={logo} alt="logo" className="card-img" />
           </Link>
-          <Link to="/" className="linkReg">
-            <button type="button" className="btn btn-outline-success">
-              Registration
+        </div>
+        <div className="Header-nav d-flex ">
+          <form className="d-flex me-5" role="search">
+            <input
+              className="form-control me-2"
+              type="search"
+              placeholder="Search"
+              aria-label="Search"
+            />
+            <button className="btn btn-outline-success" type="submit">
+              Search
             </button>
-          </Link>
+          </form>
+          <div className="Header-nav--btn">
+            <Link to="/" className="linkLog">
+              <button type="button" className="btn btn-outline-success">
+                Log in
+              </button>
+            </Link>
+            <Link to="/" className="linkReg">
+              <button type="button" className="btn btn-outline-success">
+                Registration
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
     </header>

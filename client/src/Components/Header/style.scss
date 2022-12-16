@@ -4,12 +4,17 @@
    color: black;
 }
 .Header {
-    margin-bottom: 30px;
+    background-color: rgba(177, 177 ,177,0.5);
     height: 150px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+&-container{
+    width: 1200px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: rgba(177, 177 ,177,0.5);
+   
     img{ 
         width: 280px;
     }
@@ -25,10 +30,7 @@
         width: 60%;
         display: flex;
         justify-content: space-evenly;
-        search{
-            width: 50px;
-            
-        }
+        
         &--btn{
             a:first-child {
                 margin-right: 10px;
@@ -36,4 +38,5 @@
         }
        
     }
+}
 }
