@@ -1,38 +1,38 @@
 import './style.scss';
 import { Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
 
-import { Button } from 'react-bootstrap';
+import logo from './logo.png';
 
 function Header() {
   return (
     <header className="Header">
       <div className="Header-logo">
-        <Link to="/" className="title">
-          <img className="logo" alt="logo" />
-        </Link>
-        <Link to="/" className="linkTitle">
-          <h1>VtorMall</h1>
+        <Link to="/" className="navbar-brand">
+          <img src={logo} alt="logo" className="card-img" />
         </Link>
       </div>
       <div className="Header-nav">
-        <div>
-          <InputGroup className="md-5">
-            <Form.Control />
-            <Button variant="outline-secondary" id="button-addon2">
-              Search
-            </Button>
-          </InputGroup>
-        </div>
-
-        <div>
+        <form className="d-flex" role="search">
+          <input
+            className="form-control me-2"
+            type="search"
+            placeholder="Search"
+            aria-label="Search"
+          />
+          <button className="btn btn-outline-success" type="submit">
+            Search
+          </button>
+        </form>
+        <div className="Header-nav--btn">
           <Link to="/" className="linkLog">
-            <Button variant="primary">Log in</Button>
+            <button type="button" className="btn btn-outline-success">
+              Log in
+            </button>
           </Link>
           <Link to="/" className="linkReg">
-            <Button>Registration</Button>
+            <button type="button" className="btn btn-outline-success">
+              Registration
+            </button>
           </Link>
         </div>
       </div>
