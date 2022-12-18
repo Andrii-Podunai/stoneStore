@@ -1,5 +1,6 @@
 import './style.scss';
 import logo from './logo.png';
+
 function Footer() {
   return (
     <footer className="Footer">
