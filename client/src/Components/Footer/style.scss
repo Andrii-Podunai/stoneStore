@@ -1,21 +1,18 @@
 .Footer {
-     height: 130px;
-     background-color: gray;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-    &-container{
-        width: 1200px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    
-        color: white;
-    
-        img{ 
-            width: 280px;
-        }
+    height: 130px;
+    background-color: gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &-container {
+       width: 1200px;
+       display: flex;
+       justify-content: space-between;
+       align-items: center;
+       color: white;
+       img {
+          width: 280px;
+       }
     }
-    
-    
-}
+ }
+ 
