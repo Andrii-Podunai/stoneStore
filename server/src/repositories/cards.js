@@ -34,4 +34,15 @@ async function getOne(id) {
   return dbResponse;
 }
 
-export default { init, create, getMany, getOne };
+async function updateById(id, doc) {
+  const res = await apps.replaceOne({ _id: ObjectId(id) }, doc);
+
+  return res.acknowledged;
+}
+
+async function deleteById(id) {
+  const res = await apps.deleteOne({ _id: ObjectId(id) });
+  return res.deletedCount > 0;
+}
+
+export default { init, deleteById, updateById, create, getMany, getOne };
