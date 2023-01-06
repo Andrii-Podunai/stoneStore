@@ -5,5 +5,5 @@ export const up = async (db, client) => {
 };
 
 export const down = async (db, client) => {
-  return db.collection('cards').updateMany({}, { $unset: { currency: null } });
+  // return db.collection('cards').updateMany({}, { $unset: { currency: null } });
 };

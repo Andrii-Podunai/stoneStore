@@ -2,7 +2,17 @@ import CardRepositories from '../../repositories/cards.js';
 import Schemas from '../../schemas/index.js';
 
 function getCardsHandler(request, reply) {
-  CardRepositories.getMany(request.query)
+  const query = {
+    type: request.query.type,
+    category: request.query.category,
+  };
+  CardRepositories.getMany(request.query, query)
+    .then((data) => reply.code(200).send(data))
+    .catch((error) => reply.code(error.status || 500).send(error));
+}
+
+function getCountHandler(request, reply) {
+  CardRepositories.getCount()
     .then((data) => reply.code(200).send(data))
     .catch((error) => reply.code(error.status || 500).send(error));
 }
@@ -14,9 +24,9 @@ function getCardHandler(request, reply) {
     .catch((error) => reply.code(error.status || 500).send(error));
 }
 
-function postCardsHandler(request, reply) {
+function createCardHandler(request, reply) {
   CardRepositories.create(request.body)
-    .then((data) => reply.code(201).send({ id: data.insertedId, ...request.body }))
+    .then((data) => reply.code(201).send())
     .catch((error) => {
       reply.code(error.status || 500).send(error);
     });
@@ -26,7 +36,7 @@ function updateCardHandler(request, reply) {
   const { id } = request.params;
 
   CardRepositories.updateById(id, request.body)
-    .then((data) => reply.code(200).send(data))
+    .then((data) => reply.code(200).send())
     .catch((error) => reply.code(error.status || 500).send(error));
 }
 
@@ -47,6 +57,12 @@ export default (fastify, __, done) => {
   });
   fastify.route({
     method: 'GET',
+    url: '/count',
+    schema: Schemas.getCount,
+    handler: getCountHandler,
+  });
+  fastify.route({
+    method: 'GET',
     url: '/:id',
     schema: Schemas.getCard,
     handler: getCardHandler,
@@ -55,7 +71,7 @@ export default (fastify, __, done) => {
     method: 'POST',
     url: '/',
     schema: Schemas.createCard,
-    handler: postCardsHandler,
+    handler: createCardHandler,
   });
   fastify.route({
     method: 'PUT',
