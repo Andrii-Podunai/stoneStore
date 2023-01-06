@@ -22,6 +22,14 @@ const getCards = {
   },
 };
 
+const getCount = {
+  response: {
+    200: {
+      type: 'number',
+    },
+  },
+};
+
 const createCard = {
   body: {
     type: 'object',
@@ -34,10 +42,9 @@ const createCard = {
       'location',
       'currency',
       'name',
-      'city',
       'count',
       'images',
-      'status',
+      'type',
     ],
     properties: {
       title: Card.properties.title,
@@ -48,10 +55,9 @@ const createCard = {
       location: Card.properties.location,
       currency: Card.properties.currency,
       name: Card.properties.name,
-      city: Card.properties.city,
       count: Card.properties.count,
       images: Card.properties.images,
-      status: Card.properties.status,
+      type: Card.properties.type,
     },
   },
   response: {
@@ -78,10 +84,9 @@ const updateCard = {
       'location',
       'currency',
       'name',
-      'city',
       'count',
       'images',
-      'status',
+      'type',
     ],
     properties: {
       title: Card.properties.title,
@@ -92,10 +97,9 @@ const updateCard = {
       location: Card.properties.location,
       currency: Card.properties.currency,
       name: Card.properties.name,
-      city: Card.properties.city,
       count: Card.properties.count,
       images: Card.properties.images,
-      status: Card.properties.status,
+      type: Card.properties.type,
     },
   },
   // response: {
@@ -113,4 +117,4 @@ const deleteCard = {
   },
 };
 
-export default { getCard, createCard, updateCard, deleteCard, getCards };
+export default { getCard, createCard, getCount, updateCard, deleteCard, getCards };

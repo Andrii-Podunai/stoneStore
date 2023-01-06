@@ -11,9 +11,9 @@ const Card = {
     'currency',
     'name',
     'location',
-    'city',
     'images',
     'status',
+    'type',
   ],
   properties: {
     _id: {
@@ -34,6 +34,7 @@ const Card = {
     },
     category: {
       type: 'string',
+      enum: ['paper', 'plastic', 'glass', 'metal'],
     },
     phoneNumber: {
       type: 'number',
@@ -51,10 +52,6 @@ const Card = {
       type: 'string',
       maxLength: 50,
     },
-    city: {
-      type: 'string',
-      maxLength: 100,
-    },
     count: {
       type: 'number',
     },
@@ -62,11 +59,22 @@ const Card = {
       type: 'array',
       items: {
         type: 'object',
+        properties: {
+          name: { type: 'string' },
+          originalName: { type: 'string' },
+        },
       },
     },
     status: {
       type: 'string',
       enum: ['Active', 'Pending', 'Rejected'],
+    },
+    type: {
+      type: 'string',
+      enum: ['buy', 'sell', 'free'],
+    },
+    createdAt: {
+      type: 'string',
     },
   },
 };

@@ -9,19 +9,24 @@ function init(db) {
 }
 
 function create(data) {
-  return apps.insertOne({ ...data });
+  return apps.insertOne({ ...data, status: 'Pending', createdAt: Date.now() });
 }
 
-async function getMany({ page, amount = 50 }) {
+async function getMany({ page, amount = 50 }, query) {
   if (page) {
     return await apps
-      .find()
+      .find(queryToDocument(query))
       .limit(+amount)
       .skip((page - 1) * +amount)
-      .sort({ $natural: -1 })
+      .sort({ _id: -1 })
       .toArray();
   }
+
   throw new Error("Query 'page' dont send");
+}
+
+async function getCount() {
+  return await apps.count({ status: 'Active' });
 }
 
 async function getOne(id) {
@@ -35,7 +40,7 @@ async function getOne(id) {
 }
 
 async function updateById(id, doc) {
-  const res = await apps.replaceOne({ _id: ObjectId(id) }, doc);
+  const res = await apps.replaceOne({ _id: ObjectId(id) }, { status: 'Pending', ...doc });
 
   return res.acknowledged;
 }
@@ -45,4 +50,23 @@ async function deleteById(id) {
   return res.deletedCount > 0;
 }
 
-export default { init, deleteById, updateById, create, getMany, getOne };
+function queryToDocument(query) {
+  const mapping = {
+    type: function (value) {
+      return { type: value };
+    },
+    category: function (value) {
+      return { category: value };
+    },
+  };
+
+  return Object.entries(query).reduce((acc, [key, value]) => {
+    if (Boolean(value) === true) {
+      return Object.assign(acc, mapping[key](value));
+    }
+
+    return acc;
+  }, {});
+}
+
+export default { init, deleteById, getCount, updateById, create, getMany, getOne };

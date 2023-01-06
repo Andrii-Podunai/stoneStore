@@ -2,19 +2,25 @@
 
 !!!!!!!
 all inputs are required and keep the typing as in the example
-input status can be only -- "Active", "Pending", "Rejected"
+category of cards can be only paper or glass or plastic or metal
+type of cards can be only "free" or "sell" or "buy"
 !!!!!!!
 
 1)get by id, example:
 fetch('http://localhost:8085/cards/63ac3243f21181d52f855de3')
 
-2)get array of cards, example:
+2)get control array of cards example:
 fetch('http://localhost:8085/cards/?page=1')
 It will return by default 50 cards from the end.
 If you enter "page=2" it will return by default 50 cards after 50 cards from the end, and so on...
 
 fetch('http://localhost:8085/cards/?page=1&amount=10')
 "amount"- another one query value, enter it if you want to change amount of return cards.
+
+fetch('http://localhost:8085/cards/?page=1&category=paper)
+!!!category can be paper or glass or plastic or metal!!!
+"category" - another query value, enter it if you want to get one
+page of cards with category "paper"
 
 3)post image example:
 const [files, setFiles] = useState([]);
@@ -54,15 +60,14 @@ title: 'sell metal',
 description: 'good price',
 category: 'metal',
 phoneNumber: '380972635263',
-city: 'Lviv',
 count: 3,
 currency: 'dollar',
-status:'Active',
-location: 'Проспект Лобановського 14',
+location: 'Lviv',
+type: "free",
 images: [
 {
-name: '1nHuZyAIjG3OlJBHLP_zJ.webp',
-originalName: 'test.webp',
+name: 'LVLzk4whRHP58sHVmSfsX.webp',
+originalName: 'test-image.webp',
 },
 ],
 };
@@ -105,3 +110,6 @@ and don't forget about ' crossOrigin="anonymous" ', it will not work without thi
    .then((response) => response.json())
    .then((result) => console.log(result))
    .catch((error) => console.log('error', error));
+
+7. get count "active" cards:
+   fetch('http://localhost:8085/cards/count')
