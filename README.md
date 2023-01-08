@@ -4,6 +4,7 @@
 all inputs are required and keep the typing as in the example
 category of cards can be only paper or glass or plastic or metal
 type of cards can be only "free" or "sell" or "buy"
+currency of the cards can be only "USD" or "EUR" or "UAH"
 !!!!!!!
 
 1)get by id, example:

@@ -10,6 +10,7 @@ describe('ProductCard component', () => {
         price="Test"
         image="https://upload.wikimedia.org/wikipedia/commons/b/bd/Test.svg"
         category="Test"
+        currency="EUR"
       />
     );
   });
@@ -20,11 +21,12 @@ describe('ProductCard component', () => {
         price={22345}
         image="https://upload.wikimedia.org/wikipedia/commons/b/bd/Test.svg"
         category="Test category in Product Card"
+        currency="EUR"
       />
     );
     const titleElement = screen.getByText('Test title in Product Card');
     expect(titleElement).toBeInTheDocument();
-    const priceElement = screen.getByText('ціна: 22345 грн');
+    const priceElement = screen.getByText('ціна: 22.345,00 €');
     expect(priceElement).toBeInTheDocument();
     const imageElement = screen.getByAltText('product');
     expect(imageElement.src).toContain(
@@ -41,6 +43,7 @@ describe('ProductCard component', () => {
           price={22345}
           image="https://upload.wikimedia.org/wikipedia/commons/b/bd/Test.svg"
           category="Test category in Product Card"
+          currency="EUR"
         />
       )
     ).toMatchSnapshot();
