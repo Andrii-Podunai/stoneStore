@@ -46,7 +46,7 @@ function Products() {
                 : emptyImg;
             return (
               <li key={_id}>
-                <Link to={_id}>
+                <Link to={_id} className="text-decoration-none">
                   <ProductCard
                     price={price}
                     category={category}
