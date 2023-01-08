@@ -52,8 +52,9 @@ function Home() {
               <ProductCard
                 price={elem.price}
                 category={elem.category}
-                // image={'http://localhost:8085/public/cards-images/' + elem.images.name}
+                image={'http://localhost:8085/public/cards-images/' + elem.images[0].name}
                 title={elem.title}
+                currency={elem.currency}
               />
             </li>
           );
