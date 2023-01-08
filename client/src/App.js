@@ -1,7 +1,8 @@
 import './App.scss';
 import Header from './components/Header';
-import Main from './components/Main';
+import Home from './pages/Home';
 import Footer from './components/Footer';
+import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 
 function App() {
@@ -14,7 +15,9 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Main />
+      <Routes>
+        <Route path="/" element={<Home />} />
+      </Routes>
       <Footer />
     </div>
   );
