@@ -47,6 +47,7 @@ const Card = {
     },
     currency: {
       type: 'string',
+      enum: ['EUR', 'UAH', 'USD'],
     },
     name: {
       type: 'string',
