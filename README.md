@@ -114,3 +114,9 @@ and don't forget about ' crossOrigin="anonymous" ', it will not work without thi
 
 7. get count "active" cards:
    fetch('http://localhost:8085/cards/count')
+
+8. delete images example:
+   fetch('http://localhost:8085/upload', {
+   method: 'DELETE',
+   body: ["name.webp"]
+   })
