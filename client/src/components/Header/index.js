@@ -9,50 +9,38 @@ function Header() {
 
   return (
     <header className="Header">
-      <div className="Header-container">
-        <div className="Header-logo">
-          <Link to="/" className="navbar-brand">
-            <img src={logo} alt="logo" className="card-img" />
-          </Link>
-        </div>
-        <div className="Header-nav d-flex align-items-center">
-          <form className="d-flex me-5" role="search">
-            <input
-              className="form-control me-2"
-              type="search"
-              placeholder="Search"
-              aria-label="Search"
-            />
-            <button className="btn btn-outline-success" type="submit">
-              Search
-            </button>
-          </form>
+      <div className="Header-container container d-flex flex-column navbar flex-md-row justify-content-md-between">
+        <Link to="/" className="navbar-brand m-0">
+          <img src={logo} alt="VtorMall" className="card-img" style={{ width: '280px' }} />
+        </Link>
+        <div className="Header-nav">
           {isAuthenticated === true ? (
-            <>
+            <div className="navbar">
+              <Link className="me-4">
+                <button type="button" className="btn btn-outline-success">
+                  Create ad
+                </button>
+              </Link>
               <span className="me-1">{user.name}</span>
               <button onClick={logout} type="button" className="btn btn-outline-success">
                 Log Out
               </button>
-            </>
+            </div>
           ) : (
-            <>
-              <Link to="/" className="linkLog me-1">
-                <button
-                  onClick={loginWithRedirect}
-                  type="button"
-                  className="btn btn-outline-success">
-                  Log in
-                </button>
-              </Link>
-              <Link to="/" className="linkLog me-2">
-                <button
-                  onClick={() => loginWithRedirect({ screen_hint: 'signup' })}
-                  type="button"
-                  className="btn btn-outline-success">
-                  Registration
-                </button>
-              </Link>
-            </>
+            <div className="navbar">
+              <button
+                onClick={loginWithRedirect}
+                type="button"
+                className="btn btn-outline-success me-1">
+                Log in
+              </button>
+              <button
+                onClick={() => loginWithRedirect({ screen_hint: 'signup' })}
+                type="button"
+                className="btn btn-outline-success ms-1">
+                Registration
+              </button>
+            </div>
           )}
         </div>
       </div>
