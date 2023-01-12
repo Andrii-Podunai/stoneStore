@@ -75,6 +75,9 @@ const Card = {
       enum: ['buy', 'sell', 'free'],
     },
     createdAt: {
+      type: 'number',
+    },
+    createdBy: {
       type: 'string',
     },
   },

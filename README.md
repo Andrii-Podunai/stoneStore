@@ -18,7 +18,7 @@ If you enter "page=2" it will return by default 50 cards after 50 cards from the
 fetch('http://localhost:8085/cards/?page=1&amount=10')
 "amount"- another one query value, enter it if you want to change amount of return cards.
 
-fetch('http://localhost:8085/cards/?page=1&category=paper)
+fetch('http://localhost:8085/cards/?page=1&category=paper')
 !!!category can be paper or glass or plastic or metal!!!
 "category" - another query value, enter it if you want to get one
 page of cards with category "paper"
@@ -54,33 +54,48 @@ After success request you will receive an array like this:
 ]
 Send this array in key "images" with request by number 4.
 
-const raw = {
-name: 'Mike',
-price: 16,
-title: 'sell metal',
-description: 'good price',
-category: 'metal',
-phoneNumber: '380972635263',
-count: 3,
-currency: 'dollar',
-location: 'Lviv',
-type: "free",
-images: [
+const raw = JSON.stringify({
+"title": "Продаж склa",
+"description": "Продам скло, є в наявності 200кг, усі деталі по телефону",
+"price": 25,
+"category": "glass",
+"phoneNumber": 963331232,
+"location": "проспект Перемоги 33",
+"currency": "USD",
+"name": "andrii",
+"count": 200,
+"images": [
 {
-name: 'LVLzk4whRHP58sHVmSfsX.webp',
-originalName: 'test-image.webp',
-},
+"name": "LVLzk4whRHP58sHVmSfsX.webp",
+"originalName": "test-image.webp"
+}
 ],
-};
+"type": "sell"
+});
+
+!!! If you want to create or update or delete card or keep your own cards what you created you have to write token in header when you do request !!!
+
+example token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6ImZQOU1CU1lhUGlhcU54eHEyZFRiSCJ9.eyJpc3MiOiJodHRwczovL3Z0b3JtYWxsLmF1LmF1dGgwLmNvbS8iLCJzdWIiOiJ1Ujh2OVhuY0t5bGExUFVWU0VRWXJEOFV5eURBNVpMNEBjbGllbnRzIiwiYXVkIjoiaHR0cHM6Ly9hcGkudnRvcm1hbGwiLCJpYXQiOjE2NzMzMDE2NDIsImV4cCI6MTY3MzM4ODA0MiwiYXpwIjoidVI4djlYbmNLeWxhMVBVVlNFUVlyRDhVeXlEQTVaTDQiLCJndHkiOiJjbGllbnQtY3JlZGVudGlhbHMiLCJwZXJtaXNzaW9ucyI6W119.ncRv4kYEfOEDtmrN_I-V0Ce9FoenL7dOHrZp5cZFR1t2l3-NhJaIajCLE_5MJv9uvPlTiIiXhyz2lfoFZQqUJx8fpKUdKMonQr3owMtmBHzHT3eWWvQ6amxYaxRgZyK7VUEqhQf-e0lYajR3XUYIKAsa9E7kOZ-VftTSd5_sKPLhu3Ll_c0or4iwbhLqpbub_3Mk9Dg62pXTA4rxFVxi94hAi4S6HG8yI9hNN7BfZJoHltwQaIvhkpPjlMOm01tOUx6pz86dtu7JgG8vsTj2-5B2i23HOYlnKqMrUkjXD5zzXkSxLMqHyOyOIv-xsBSbRqBijfo9NValTwWY5TTibw'
+
+const myHeaders = new Headers();
+myHeaders.append('Content-Type', 'application/json');
+myHeaders.append(
+'Authorization',
+`Bearer ${token}`
+);
 
 4)post card example:
-fetch('http://localhost:8085/cards', {
+const requestOptions = {
 method: 'POST',
-body: JSON.stringify(raw),
-headers: {
-'Content-Type': 'application/json',
-},
-})
+headers: myHeaders,
+body: raw,
+};
+
+fetch('http://localhost:8085/cards', requestOptions)
+.then((response) => response.text())
+.then((result) => console.log(result))
+.catch((error) => console.log('error', error));
+
 If you send images, always use array "[]" even if you want to send only 1 image also use array.
 In name to image use name witch you will receive from request by number 3.
 
@@ -89,34 +104,44 @@ To correctly display image use this example:
 In src you enter url with the name which you will receive from server
 and don't forget about ' crossOrigin="anonymous" ', it will not work without this
 
-5. pull card example:
-   fetch('http://localhost:8085/cards/63b1c41e9838325feebe5183', {
-   method: 'PUT',
-   headers: {
-   'Content-Type': 'application/json',
-   },
-   body: JSON.stringify(raw),
-   })
-   .then((response) => response.json())
-   .then((result) => console.log(result))
-   .catch((error) => console.log('error', error));
+5.pull card example:
+const requestOptions = {
+method: 'PUT',
+headers: myHeaders,
+body: raw,
+};
 
-6. delete card example:
-   fetch('http://localhost:8085/cards/63b1cbe19838325feebe5185', {
-   method: 'DELETE',
-   headers: {
-   'Content-Type': 'application/json',
-   },
-   })
-   .then((response) => response.json())
-   .then((result) => console.log(result))
-   .catch((error) => console.log('error', error));
+fetch('http://localhost:8085/cards/63b1cbe19838325feebe5185', requestOptions)
+.then((response) => response.text())
+.then((result) => console.log(result))
+.catch((error) => console.log('error', error));
 
-7. get count "active" cards:
-   fetch('http://localhost:8085/cards/count')
+6.delete card example:
+const requestOptions = {
+method: 'DELETE',
+headers: myHeaders,
+};
+fetch("http://localhost:8085/cards/63b1cbe19838325feebe5185", requestOptions)
 
-8. delete images example:
-   fetch('http://localhost:8085/upload', {
-   method: 'DELETE',
-   body: ["name.webp"]
-   })
+.then(response => response.text())
+.then(result => console.log(result))
+.catch(error => console.log('error', error));
+
+7.get your own cards what you created example:
+const requestOptions = {
+method: 'GET',
+headers: myHeaders,
+};
+fetch("http://localhost:8085/my/cards", requestOptions)
+.then(response => response.json())
+.then(result => console.log(result))
+.catch(error => console.log('error', error));
+
+8.get count "active" cards:
+fetch('http://localhost:8085/cards/count')
+
+9.delete images example:
+fetch('http://localhost:8085/upload', {
+method: 'DELETE',
+body: ["name.webp"]
+})

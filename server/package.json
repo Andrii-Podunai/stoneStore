@@ -12,7 +12,9 @@
     "@fastify/helmet": "^10.1.0",
     "@fastify/multipart": "^7.3.0",
     "@fastify/static": "^6.6.0",
+    "axios": "^1.2.2",
     "fastify": "^4.10.2",
+    "fastify-auth0-verify": "^1.0.0",
     "mongodb": "^4.13.0",
     "nanoid": "^4.0.0",
     "pump": "^3.0.0"

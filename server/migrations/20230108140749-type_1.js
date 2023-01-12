@@ -5,5 +5,5 @@ export const up = async (db) => {
 };
 
 export const down = async (db) => {
-  return db.collection('cards').updateMany({ type: { $exists: true } }, { $set: { type: 'sell' } });
+  // return db.collection('cards').updateMany({ type: { $exists: true } }, { $set: { type: 'sell' } });
 };
