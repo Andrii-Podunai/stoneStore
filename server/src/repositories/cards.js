@@ -8,13 +8,13 @@ function init(db) {
   }
 }
 
-function create(data) {
-  return apps.insertOne({ ...data, status: 'Pending', createdAt: Date.now() });
+function create(data, sub) {
+  return apps.insertOne({ ...data, status: 'Pending', createdAt: Date.now(), createdBy: sub });
 }
 
-async function getMany({ page, amount = 50 }, query) {
+function getMany({ page, amount = 50 }, query) {
   if (page) {
-    return await apps
+    return apps
       .find(queryToDocument(query))
       .limit(+amount)
       .skip((page - 1) * +amount)
@@ -25,12 +25,13 @@ async function getMany({ page, amount = 50 }, query) {
   throw new Error("Query 'page' dont send");
 }
 
-async function getCount() {
-  return await apps.count({ status: 'Active' });
+function getCount() {
+  return apps.count({ status: 'Active' });
 }
 
 async function getOne(id) {
   const dbResponse = await apps.findOne({ _id: ObjectId(id) });
+
   if (dbResponse === null) {
     const error = new Error('Not found');
     error.status = 404;
@@ -39,15 +40,38 @@ async function getOne(id) {
   return dbResponse;
 }
 
-async function updateById(id, doc) {
-  const res = await apps.replaceOne({ _id: ObjectId(id) }, { status: 'Pending', ...doc });
+async function updateById(id, doc, sub) {
+  const myCard = await apps.findOne({ _id: ObjectId(id) });
 
-  return res.acknowledged;
+  if (sub === myCard.createdBy) {
+    const res = await apps.replaceOne(
+      { _id: ObjectId(id) },
+      { ...myCard, ...doc, status: 'Pending' }
+    );
+    return res.acknowledged;
+  }
+
+  const error = new Error('you have no control over this card');
+  error.status = 404;
+  throw error;
+  0;
 }
 
-async function deleteById(id) {
-  const res = await apps.deleteOne({ _id: ObjectId(id) });
-  return res.deletedCount > 0;
+async function deleteById(id, sub) {
+  const myCard = await apps.findOne({ _id: ObjectId(id) });
+
+  if (sub === myCard.createdBy) {
+    const res = await apps.deleteOne({ _id: ObjectId(id) });
+    return res.deletedCount > 0;
+  }
+
+  const error = new Error('you have no control over this card');
+  error.status = 404;
+  throw error;
+}
+
+function getMyCards(sub) {
+  return apps.find({ createdBy: sub }).toArray();
 }
 
 function queryToDocument(query) {
@@ -69,4 +93,4 @@ function queryToDocument(query) {
   }, {});
 }
 
-export default { init, deleteById, getCount, updateById, create, getMany, getOne };
+export default { init, getMyCards, deleteById, getCount, updateById, create, getMany, getOne };
