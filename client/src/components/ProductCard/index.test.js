@@ -11,6 +11,7 @@ describe('ProductCard component', () => {
         image="https://upload.wikimedia.org/wikipedia/commons/b/bd/Test.svg"
         category="Test"
         currency="EUR"
+        type="sell"
       />
     );
   });
@@ -22,6 +23,7 @@ describe('ProductCard component', () => {
         image="https://upload.wikimedia.org/wikipedia/commons/b/bd/Test.svg"
         category="Test category in Product Card"
         currency="EUR"
+        type="sell"
       />
     );
     const titleElement = screen.getByText('Test title in Product Card');
@@ -34,6 +36,8 @@ describe('ProductCard component', () => {
     );
     const categoryElement = screen.getByText('Test category in Product Card');
     expect(categoryElement).toBeInTheDocument();
+    const typeElement = screen.getByText('продаж');
+    expect(typeElement).toBeInTheDocument();
   });
   it('should render correctly ProductCard snapshot', () => {
     expect(
@@ -44,6 +48,7 @@ describe('ProductCard component', () => {
           image="https://upload.wikimedia.org/wikipedia/commons/b/bd/Test.svg"
           category="Test category in Product Card"
           currency="EUR"
+          type="sell"
         />
       )
     ).toMatchSnapshot();
