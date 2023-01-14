@@ -27,16 +27,20 @@ Object {
           >
             Test title in Product Card
           </h4>
-          <div
-            class="d-flex align-items-center gap-1"
-          >
-            <p
-              class="fst-italic"
+          <p>
+            тип оголошення: 
+            <span
+              class="fw-bolder"
             >
-              ціна: 
-              22.345,00 €
-            </p>
-          </div>
+              продаж
+            </span>
+          </p>
+          <p
+            class="fst-italic"
+          >
+            ціна: 
+            22.345,00 €
+          </p>
           <div
             class="ant-card-meta"
           >
@@ -77,16 +81,20 @@ Object {
         >
           Test title in Product Card
         </h4>
-        <div
-          class="d-flex align-items-center gap-1"
-        >
-          <p
-            class="fst-italic"
+        <p>
+          тип оголошення: 
+          <span
+            class="fw-bolder"
           >
-            ціна: 
-            22.345,00 €
-          </p>
-        </div>
+            продаж
+          </span>
+        </p>
+        <p
+          class="fst-italic"
+        >
+          ціна: 
+          22.345,00 €
+        </p>
         <div
           class="ant-card-meta"
         >

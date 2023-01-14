@@ -2,8 +2,9 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Col, Row } from 'antd';
+import emptyImg from 'images/emptyImage.png';
 import './style.scss';
-import ProductCard from '../../components/ProductCard';
+import ProductCard from 'components/ProductCard';
 
 function Home() {
   const [data, setData] = useState([]);
@@ -45,16 +46,21 @@ function Home() {
         </Col>
       </Row>
       <h3 className="PageHeader">Останні оголошення</h3>
-      <ul className="ContentContainer">
+      <ul className="container d-flex flex-wrap gap-3 list-unstyled pt-3 pb-3">
         {data.map((elem) => {
+          const image =
+            typeof elem.images[0].name !== 'undefined'
+              ? 'http://localhost:8085/public/cards-images/' + elem.images[0].name
+              : emptyImg;
           return (
             <li key={elem._id}>
               <ProductCard
                 price={elem.price}
                 category={elem.category}
-                image={'http://localhost:8085/public/cards-images/' + elem.images[0].name}
+                image={image}
                 title={elem.title}
                 currency={elem.currency}
+                type={elem.type}
               />
             </li>
           );
