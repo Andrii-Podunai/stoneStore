@@ -5,6 +5,9 @@ import Footer from './components/Footer';
 import { Route, Routes } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import Products from './pages/Products';
+import CreateProductPage from 'pages/CreateProductPage/CreateProductPage';
+import SuccessCreated from 'pages/CreateProductPage/SuccessCreated';
+import ProtectedRoute from 'components/ProtectedRoute';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -16,12 +19,42 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
-        </Routes>
-      </main>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <main>
+              <Home />
+            </main>
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            <main>
+              <Products />
+            </main>
+          }
+        />
+        <Route
+          path="/create"
+          element={
+            <main>
+              <ProtectedRoute>
+                <CreateProductPage />
+              </ProtectedRoute>
+            </main>
+          }
+        />
+        <Route
+          path="/successfully"
+          element={
+            <main>
+              <SuccessCreated />
+            </main>
+          }
+        />
+      </Routes>
       <Footer />
     </div>
   );

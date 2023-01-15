@@ -16,10 +16,8 @@ function Header() {
         <div className="Header-nav">
           {isAuthenticated === true ? (
             <div className="navbar">
-              <Link className="me-4">
-                <button type="button" className="btn btn-outline-success">
-                  Create ad
-                </button>
+              <Link to="/create" className="btn btn-warning me-4">
+                Створити оголошення
               </Link>
               <span className="me-1">{user.name}</span>
               <button onClick={logout} type="button" className="btn btn-outline-success">
@@ -28,6 +26,9 @@ function Header() {
             </div>
           ) : (
             <div className="navbar">
+              <Link to="/create" className="btn btn-warning me-4">
+                Створити оголошення
+              </Link>
               <button
                 onClick={loginWithRedirect}
                 type="button"
