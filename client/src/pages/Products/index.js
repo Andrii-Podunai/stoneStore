@@ -44,7 +44,7 @@ function Products(): React.Node {
         <ul className="list-unstyled d-flex gap-3 flex-wrap justify-content-center pt-3 pb-3">
           {currentData.map(({ _id, price, images, category, title, currency, type }) => {
             const image =
-              typeof images[0].name !== 'undefined'
+              images.length > 0 && images[0].name
                 ? URL + '/public/cards-images/' + images[0].name
                 : emptyImg;
             return (
