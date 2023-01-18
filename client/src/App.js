@@ -19,42 +19,21 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <main>
-              <Home />
-            </main>
-          }
-        />
-        <Route
-          path="/products"
-          element={
-            <main>
-              <Products />
-            </main>
-          }
-        />
-        <Route
-          path="/create"
-          element={
-            <main>
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route
+            path="/create"
+            element={
               <ProtectedRoute>
                 <CreateProductPage />
               </ProtectedRoute>
-            </main>
-          }
-        />
-        <Route
-          path="/successfully"
-          element={
-            <main>
-              <SuccessCreated />
-            </main>
-          }
-        />
-      </Routes>
+            }
+          />
+          <Route path="/successfully" element={<SuccessCreated />} />
+        </Routes>
+      </main>
       <Footer />
     </div>
   );

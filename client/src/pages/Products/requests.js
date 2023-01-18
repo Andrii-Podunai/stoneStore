@@ -6,7 +6,8 @@ export const URL: string = process.env.REACT_APP_SERVER_URL || 'http://localhost
 
 export async function requestGetQuery(
   page: number,
-  amount: number
+  amount: number,
+  category: string
 ): Promise<
   Array<{
     _id: string,
@@ -23,11 +24,19 @@ export async function requestGetQuery(
     type: string,
   }>
 > {
+  const params: {
+    page: number,
+    amount: number,
+    category?: string,
+  } = {
+    page: page,
+    amount: amount,
+  };
+  if (category !== 'all') {
+    params.category = category;
+  }
   const response = await axios.get(`${URL}/cards`, {
-    params: {
-      page: page,
-      amount: amount,
-    },
+    params: params,
   });
   return response.data;
 }
