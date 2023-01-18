@@ -54,14 +54,16 @@ function Home() {
               : emptyImg;
           return (
             <li key={elem._id}>
-              <ProductCard
-                price={elem.price}
-                category={elem.category}
-                image={image}
-                title={elem.title}
-                currency={elem.currency}
-                type={elem.type}
-              />
+              <Link to={`/products/${elem._id}`}>
+                <ProductCard
+                  price={elem.price}
+                  category={elem.category}
+                  image={image}
+                  title={elem.title}
+                  currency={elem.currency}
+                  type={elem.type}
+                />
+              </Link>
             </li>
           );
         })}
