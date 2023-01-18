@@ -32,7 +32,7 @@ function CreateProductPage() {
     };
 
     getUserAccessToken();
-  }, []);
+  }, [getIdTokenClaims]);
 
   function submit(value, files) {
     axios

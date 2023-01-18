@@ -25,28 +25,28 @@ function Home() {
     <div className="container-main">
       <Row style={{ marginTop: '10px' }}>
         <Col span={6}>
-          <Link to="/glass">
+          <Link to="/products?category=glass">
             <img src="./img/glass.jpg" alt="Glass" className="Category"></img>
           </Link>
         </Col>
         <Col span={6}>
-          <Link to="/paper">
+          <Link to="/products?category=paper">
             <img src="./img/paper.jpg" alt="Paper" className="Category"></img>
           </Link>
         </Col>
         <Col span={6}>
-          <Link to="/metal">
+          <Link to="/products?category=metal">
             <img src="./img/metal.jpg" alt="Metal" className="Category"></img>
           </Link>
         </Col>
         <Col span={6}>
-          <Link to="/plastic">
+          <Link to="/products?category=plastic">
             <img src="./img/plastic.jpg" alt="Plastic" className="Category"></img>
           </Link>
         </Col>
       </Row>
       <h3 className="PageHeader">Останні оголошення</h3>
-      <ul className="container d-flex flex-wrap gap-3 list-unstyled pt-3 pb-3">
+      <ul className="container d-flex justify-content-center flex-wrap gap-3 list-unstyled pt-3 pb-3">
         {data.map((elem) => {
           const image =
             elem.images.length > 0 && elem.images[0].name
@@ -66,7 +66,7 @@ function Home() {
           );
         })}
       </ul>
-      <Link to={'/products'}>
+      <Link to={'/products?category=all'}>
         <p className="link-success">До всіх оголошень</p>
       </Link>
     </div>

@@ -1,6 +1,7 @@
 [ignore]
 <PROJECT_ROOT>/build/.*
 <PROJECT_ROOT>/flow-typed/npm/.*
+.*/**/malformed_package_json/package.json
 
 [include]
 
