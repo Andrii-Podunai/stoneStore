@@ -40,52 +40,57 @@ function ProductPage() {
   };
   if (!product) return <h4>Сторінка не знайдена</h4>;
   return (
-    <div className="product">
-      <div className="product-img">
-        <Carousel arrows dots={false} prevArrow={<button />} nextArrow={<button />}>
-          {' '}
-          {(product.images || []).map((image) => (
-            <img
-              src={`http://localhost:8085/public/cards-images/${image.name}`}
-              alt="img"
-              crossOrigin="anonymous"
-            />
-          ))}
-        </Carousel>
-      </div>
-      <div className="product-info">
-        <p className="product-info--dateAdd">
-          Опубліковано {dayjs(parseInt(product.createdAt)).format('DD.MM.YYYY')}
-        </p>
-        <h2 className="product-info--title"> {product.title}</h2>{' '}
-        <h3 className="product-info--price">
-          {product.price.toLocaleString('de-DE', { style: 'currency', currency: product.currency })}
-        </h3>{' '}
-        <p className="product-info--count">Кількість: {product.count}</p>{' '}
-        <p className="product-info--type">{typeObj[product.type]}</p>
-        <div className="product-info--category">
-          <span className={`badge ${product.category}`}> {categoryObj[product.category]}</span>
+    <div className="product-main">
+      <div className="product">
+        <div className="product-img">
+          <Carousel arrows dots={false} prevArrow={<button />} nextArrow={<button />}>
+            {' '}
+            {(product.images || []).map((image) => (
+              <img
+                src={`http://localhost:8085/public/cards-images/${image.name}`}
+                alt="img"
+                crossOrigin="anonymous"
+              />
+            ))}
+          </Carousel>
         </div>
-        <h3 className="product-info--descriptionTitle">Опис</h3>
-        <p className="product-info--description">{product.description}</p>
-      </div>
-      <div className="product-info--seller">
-        <h2 className="product-info--sellerTitle">Зв'язатися з продавцем</h2>
-        <p className="product-info--name">{product.name}</p>
-        <a className="product-info--number" href={`tel:${product.phoneNumber}`}>
-          <i className="fa-solid fa-phone-volume mt-1" />
-          {''} {product.phoneNumber}
-        </a>
-        <p className="product-info--location">
-          Місцезнаходження:{' '}
-          <a
-            className="product-info--link"
-            target={'_blank'}
-            rel="noreferrer"
-            href={`https://www.google.com/maps/place/${product.location}`}>
-            {product.location}
+        <div className="product-info">
+          <p className="product-info--dateAdd">
+            Опубліковано {dayjs(parseInt(product.createdAt)).format('DD.MM.YYYY')}
+          </p>
+          <h2 className="product-info--title"> {product.title}</h2>{' '}
+          <h3 className="product-info--price">
+            {product.price.toLocaleString('de-DE', {
+              style: 'currency',
+              currency: product.currency,
+            })}
+          </h3>{' '}
+          <p className="product-info--count">Кількість: {product.count}</p>{' '}
+          <p className="product-info--type">{typeObj[product.type]}</p>
+          <div className="product-info--category">
+            <span className={`badge ${product.category}`}> {categoryObj[product.category]}</span>
+          </div>
+          <h3 className="product-info--descriptionTitle">Опис</h3>
+          <p className="product-info--description">{product.description}</p>
+        </div>
+        <div className="product-info--seller">
+          <h2 className="product-info--sellerTitle">Зв'язатися з продавцем</h2>
+          <p className="product-info--name">{product.name}</p>
+          <a className="product-info--number" href={`tel:${product.phoneNumber}`}>
+            <i className="fa-solid fa-phone-volume mt-1" />
+            {''} {product.phoneNumber}
           </a>
-        </p>
+          <p className="product-info--location">
+            Місцезнаходження:{' '}
+            <a
+              className="product-info--link"
+              target={'_blank'}
+              rel="noreferrer"
+              href={`https://www.google.com/maps/place/${product.location}`}>
+              {product.location}
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
