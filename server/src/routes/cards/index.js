@@ -26,7 +26,7 @@ function getCardHandler(request, reply) {
 
 function createCardHandler(request, reply) {
   CardRepositories.create(request.body, request.user.sub)
-    .then((data) => reply.code(201).send())
+    .then(() => reply.code(201).send())
     .catch((error) => {
       reply.code(error.status || 500).send(error);
     });
@@ -36,7 +36,7 @@ function updateCardHandler(request, reply) {
   const { id } = request.params;
 
   CardRepositories.updateById(id, request.body, request.user.sub)
-    .then((data) => reply.code(200).send())
+    .then(() => reply.code(200).send())
     .catch((error) => reply.code(error.status || 500).send(error));
 }
 

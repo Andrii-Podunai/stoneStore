@@ -61,7 +61,8 @@ const Card = {
       items: {
         type: 'object',
         properties: {
-          name: { type: 'string' },
+          url: { type: 'string' },
+          key: { type: 'string' },
           originalName: { type: 'string' },
         },
       },
