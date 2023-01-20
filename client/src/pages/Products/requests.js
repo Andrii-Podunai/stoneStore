@@ -40,6 +40,7 @@ export async function requestGetQuery(
   });
   return response.data;
 }
+
 export async function requestGetCount(): Promise<number> {
   const response = await axios.get(`${URL}/cards/count`);
   return response.data;
