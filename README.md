@@ -49,8 +49,8 @@ return(
 Necessarily use key 'files[]' otherwise will be a mistake.
 After success request you will receive an array like this:
 [
-{name: example.png, originalName: elseExample.png},
-{name: example.jpg, originalName: elseExample.jpg}
+{url: imageUrl.png, key:someKey.png originalName: elseExample.png},
+{url: imageUrl.jpg, key:someKey.jpg originalName: elseExample.jpg}
 ]
 Send this array in key "images" with request by number 4.
 
@@ -66,9 +66,10 @@ const raw = JSON.stringify({
 "count": 200,
 "images": [
 {
-"name": "LVLzk4whRHP58sHVmSfsX.webp",
-"originalName": "test-image.webp"
-}
+"url": "https://vtormall.s3.eu-central-1.amazonaws.com/qe2fHCHASYyn1tywPseBN.webp",
+"key": "qe2fHCHASYyn1tywPseBN.webp",
+"originalName": "this-is-a-test-wp.webp"
+},
 ],
 "type": "sell"
 });
@@ -99,10 +100,6 @@ fetch('http://localhost:8085/cards', requestOptions)
 If you send images, always use array "[]" even if you want to send only 1 image also use array.
 In name to image use name witch you will receive from request by number 3.
 
-To correctly display image use this example:
-<img src={`http://localhost:8085/public/cards-images/${images[0].name}`} alt="img" crossOrigin="anonymous" />;
-In src you enter url with the name which you will receive from server
-and don't forget about ' crossOrigin="anonymous" ', it will not work without this
 
 5.pull card example:
 const requestOptions = {
@@ -143,5 +140,5 @@ fetch('http://localhost:8085/cards/count')
 9.delete images example:
 fetch('http://localhost:8085/upload', {
 method: 'DELETE',
-body: ["name.webp"]
+body: ["key.webp"]
 })

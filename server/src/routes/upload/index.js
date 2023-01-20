@@ -1,10 +1,7 @@
-import fs from 'fs';
-import path from 'path';
-import pump from 'pump';
+import { uploadToS3 } from '../../aws-s3-services/upload.js';
+import { deleteFromS3 } from '../../aws-s3-services/delete.js';
 
 import { nanoid } from 'nanoid';
-
-const __dirname = path.resolve();
 
 async function uploadHandler(request, reply) {
   try {
@@ -16,11 +13,11 @@ async function uploadHandler(request, reply) {
       }
       const imageType = image.filename.match(/\.(jpg|png|webp|jpeg)/g)[0];
       const newFileName = nanoid() + imageType;
-      const storedFile = fs.createWriteStream(
-        __dirname + '/public/' + 'cards-images/' + newFileName
-      );
-      await pump(image.file, storedFile);
-      files.push({ name: newFileName, originalName: image.filename });
+      const response = await uploadToS3(image, newFileName);
+      if (response['$metadata'].httpStatusCode !== 200) {
+        throw new Error(`aws response status=${response['$metadata'].httpStatusCode}`);
+      }
+      files.push({ url: response.Location, key: newFileName, originalName: image.filename });
     }
     reply.send(files);
   } catch (error) {
@@ -30,10 +27,11 @@ async function uploadHandler(request, reply) {
 
 async function deleteHandler(request, reply) {
   try {
-    request.body.forEach((name) => {
-      fs.unlinkSync(__dirname + '/public/' + 'cards-images/' + name);
-    });
-    reply.send();
+    const response = await deleteFromS3(request.body);
+    if (response['$metadata'].httpStatusCode !== 200) {
+      new Error(`aws s3 status code = ${response['$metadata'].httpStatusCode}`);
+    }
+    reply.code(200);
   } catch (error) {
     reply.code(error.status || 500).send(error);
   }

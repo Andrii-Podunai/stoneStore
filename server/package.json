@@ -8,10 +8,11 @@
     "dev": "nodemon -r dotenv/config src/server.js"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.252.0",
+    "@aws-sdk/lib-storage": "^3.252.0",
     "@fastify/cors": "^8.2.0",
     "@fastify/helmet": "^10.1.0",
     "@fastify/multipart": "^7.3.0",
-    "@fastify/static": "^6.6.0",
     "axios": "^1.2.2",
     "fastify": "^4.10.2",
     "fastify-auth0-verify": "^1.0.0",
