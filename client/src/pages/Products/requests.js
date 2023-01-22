@@ -18,7 +18,8 @@ export async function requestGetQuery(
     currency: string,
     count: number,
     images: Array<{
-      name: string,
+      url: string,
+      key: string,
       originalName: string,
     }>,
     type: string,

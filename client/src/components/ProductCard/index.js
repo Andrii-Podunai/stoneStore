@@ -54,14 +54,7 @@ function ProductCard({
       hoverable
       className="home-cards"
       bodyStyle={{ paddingLeft: '10px', paddingRight: '10px' }}
-      cover={
-        <img
-          style={{ height: '300px', objectFit: 'cover' }}
-          alt="product"
-          src={image}
-          crossOrigin="anonymous"
-        />
-      }>
+      cover={<img style={{ height: '300px', objectFit: 'cover' }} alt="product" src={image} />}>
       <h4 className="fs-6 mb-3">{title}</h4>
       <p>
         тип оголошення: <span className="fw-bolder">{handleTypeTranslate(type)}</span>

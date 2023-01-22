@@ -49,9 +49,7 @@ function Home() {
       <ul className="container d-flex justify-content-center flex-wrap gap-3 list-unstyled pt-3 pb-3">
         {data.map((elem) => {
           const image =
-            elem.images.length > 0 && elem.images[0].name
-              ? 'http://localhost:8085/public/cards-images/' + elem.images[0].name
-              : emptyImg;
+            elem.images.length > 0 && elem.images[0].url ? elem.images[0].url : emptyImg;
           return (
             <li key={elem._id}>
               <Link to={`/products/${elem._id}`}>
