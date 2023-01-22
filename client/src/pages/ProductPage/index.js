@@ -47,11 +47,7 @@ function ProductPage() {
           <Carousel arrows dots={false} prevArrow={<button />} nextArrow={<button />}>
             {' '}
             {(product.images || []).map((image) => (
-              <img
-                src={`http://localhost:8085/public/cards-images/${image.name}`}
-                alt="img"
-                crossOrigin="anonymous"
-              />
+              <img key={image.key} src={image.url} alt="img" />
             ))}
           </Carousel>
         </div>
