@@ -3,6 +3,7 @@ import { Form, Input, Button, Select, Upload, message } from 'antd';
 import { Formik } from 'formik';
 import schema from './validationSchema';
 import axios from 'axios';
+import { SERVER_URL } from 'variables';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -52,14 +53,14 @@ function ProductForm({ initialValues, submit }) {
                 },
               ]}
               name="files[]"
-              action="http://localhost:8085/upload"
+              action={SERVER_URL + '/upload'}
               accept="image/*"
               listType="picture-card"
               multiple
               onChange={(info) => {
                 if (info.file.status === 'removed') {
-                  axios.delete('http://localhost:8085/upload', {
-                    data: [info.file.response[0].name],
+                  axios.delete(`${SERVER_URL}/upload`, {
+                    data: [info.file.response[0].key],
                   });
                 }
                 if (info.file.status === 'done') {

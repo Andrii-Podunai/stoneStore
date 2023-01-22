@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { Carousel } from 'antd';
 import './style.scss';
+import { SERVER_URL } from 'variables';
 
 function ProductPage() {
   const [product, setProduct] = useState();
@@ -12,7 +13,7 @@ function ProductPage() {
 
   async function getResponse() {
     setLoading(true);
-    const { data } = await axios.get(`http://localhost:8085/cards/${id}`);
+    const { data } = await axios.get(`${SERVER_URL}/cards/${id}`);
     setLoading(false);
     setProduct(data);
   }

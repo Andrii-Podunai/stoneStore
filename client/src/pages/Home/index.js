@@ -5,13 +5,14 @@ import { Col, Row } from 'antd';
 import emptyImg from 'images/emptyImage.png';
 import './style.scss';
 import ProductCard from 'components/ProductCard';
+import { SERVER_URL } from 'variables';
 
 function Home() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
     axios
-      .get('http://localhost:8085/cards', {
+      .get(`${SERVER_URL}/cards`, {
         params: {
           page: 1,
           amount: 12,
