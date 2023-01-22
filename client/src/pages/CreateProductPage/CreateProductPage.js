@@ -3,6 +3,7 @@ import ProductForm from '../../components/ProductForm';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
+import { SERVER_URL } from 'variables';
 
 const initialValues = {
   name: '',
@@ -36,7 +37,7 @@ function CreateProductPage() {
 
   function submit(value, files) {
     axios
-      .post('http://localhost:8085/cards', JSON.stringify({ ...value, images: files }), {
+      .post(`${SERVER_URL}/cards`, JSON.stringify({ ...value, images: files }), {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,

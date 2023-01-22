@@ -1,8 +1,7 @@
 //@flow
 
 import axios from 'axios';
-
-export const URL: string = process.env.REACT_APP_SERVER_URL || 'http://localhost:8085';
+import { SERVER_URL } from 'variables';
 
 export async function requestGetQuery(
   page: number,
@@ -36,13 +35,13 @@ export async function requestGetQuery(
   if (category !== 'all') {
     params.category = category;
   }
-  const response = await axios.get(`${URL}/cards`, {
+  const response = await axios.get(`${SERVER_URL}/cards`, {
     params: params,
   });
   return response.data;
 }
 
 export async function requestGetCount(): Promise<number> {
-  const response = await axios.get(`${URL}/cards/count`);
+  const response = await axios.get(`${SERVER_URL}/cards/count`);
   return response.data;
 }
