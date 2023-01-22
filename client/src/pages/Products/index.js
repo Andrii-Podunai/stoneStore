@@ -4,7 +4,6 @@ import * as React from 'react';
 import { Pagination, Radio } from 'antd';
 import { requestGetQuery, requestGetCount } from './requests';
 import ProductCard from 'components/ProductCard';
-import { URL } from './requests';
 import emptyImg from 'images/emptyImage.png';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
@@ -90,10 +89,7 @@ function Products(): React.Node {
         />
         <ul className="list-unstyled d-flex gap-3 flex-wrap justify-content-center pt-3 pb-3">
           {currentData.map(({ _id, price, images, category, title, currency, type }) => {
-            const image =
-              images.length > 0 && images[0].name
-                ? URL + '/public/cards-images/' + images[0].name
-                : emptyImg;
+            const image = images.length > 0 && images[0].url ? images[0].url : emptyImg;
             return (
               <li key={_id}>
                 <Link to={_id} className="text-decoration-none">
