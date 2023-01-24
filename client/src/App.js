@@ -7,8 +7,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Products from './pages/Products';
 import ProductPage from './pages/ProductPage';
 import CreateProductPage from 'pages/CreateProductPage/CreateProductPage';
-import SuccessCreated from 'pages/CreateProductPage/SuccessCreated';
+import SuccessForm from 'pages/SuccessForm';
 import ProtectedRoute from 'components/ProtectedRoute';
+import EditProductPage from 'pages/EditProductPage';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -33,7 +34,8 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/successfully" element={<SuccessCreated />} />
+          <Route path="/products/:id/edit" element={<EditProductPage />} />
+          <Route path="/successfully" element={<SuccessForm />} />
         </Routes>
       </main>
       <Footer />

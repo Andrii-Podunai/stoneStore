@@ -12,10 +12,11 @@ const initialValues = {
   price: 0,
   count: 0,
   category: '',
-  phoneNumber: '',
+  phoneNumber: '+38 (___) ___ __ __',
   location: '',
   currency: 'UAH',
   type: '',
+  images: [],
 };
 
 function CreateProductPage() {
@@ -35,9 +36,9 @@ function CreateProductPage() {
     getUserAccessToken();
   }, [getIdTokenClaims]);
 
-  function submit(value, files) {
+  function submit(value) {
     axios
-      .post(`${SERVER_URL}/cards`, JSON.stringify({ ...value, images: files }), {
+      .post(`${SERVER_URL}/cards`, JSON.stringify({ ...value }), {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,

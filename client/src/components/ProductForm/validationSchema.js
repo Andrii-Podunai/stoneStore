@@ -1,4 +1,19 @@
 import * as yup from 'yup';
+import convertNumber from './numberConverter';
+
+yup.addMethod(yup.string, 'customMinNumber', function (...props) {
+  const [prop, errorMessage] = props;
+  return this.test('testCustomMin', errorMessage, function (value) {
+    const { path, createError } = this;
+    if (!value || convertNumber(value).length < prop) {
+      return createError({
+        path,
+        message: errorMessage || `${path} must be at least ${prop} characters`,
+      });
+    }
+    return true;
+  });
+});
 
 const schema = yup.object().shape({
   name: yup
@@ -14,14 +29,15 @@ const schema = yup.object().shape({
     .min(15, 'Опис повинен бути не коротшим за 15 знаків')
     .required('Опис відіграє важливу роль, не забудьте додати його'),
   phoneNumber: yup
-    .number()
+    .string()
     .typeError('Введіть корректний номер')
-    .min(8, 'Телефон має мати не менше 8 символів')
+    .customMinNumber(12, 'Введіть корректний номер')
     .required('Необхідно вказати номер телефону'),
+  images: yup.array().min(1, 'Це поле є обов`язковим для заповнення'),
   price: yup
     .number('Неправильно вказана ціна. Відредагуйте поле')
     .required('Необхідно вказати ціну')
-    .positive('Ціна має бути позитивнивним числом'),
+    .min(0, 'Ціна має бути позитивнивним числом'),
   count: yup
     .number('Неправильно вказана кількість товару. Відредагуйте поле')
     .required('Необхідно вказати кількість товару')

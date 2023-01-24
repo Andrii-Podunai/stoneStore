@@ -2,14 +2,24 @@ import React, { useState } from 'react';
 import { Form, Input, Button, Select, Upload, message } from 'antd';
 import { Formik } from 'formik';
 import schema from './validationSchema';
+import { PatternFormat } from 'react-number-format';
 import axios from 'axios';
 import { SERVER_URL } from 'variables';
+import convertNumber from './numberConverter';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
 function ProductForm({ initialValues, submit }) {
-  const [files, setFiles] = useState([]);
+  const [fileList, setFileList] = useState(
+    initialValues.images.map((el) => {
+      return {
+        response: [el],
+        url: el.url,
+      };
+    })
+  );
+  console.log(fileList);
 
   return (
     <Formik
@@ -17,7 +27,10 @@ function ProductForm({ initialValues, submit }) {
       validationSchema={schema}
       validateOnChange={false}
       onSubmit={(value) => {
-        submit(value, files);
+        if (typeof value.phoneNumber === 'string') {
+          value.phoneNumber = convertNumber(value.phoneNumber);
+        }
+        submit(value);
       }}>
       {({ handleSubmit, touched, errors, getFieldProps, values, setFieldValue }) => (
         <Form
@@ -44,14 +57,15 @@ function ProductForm({ initialValues, submit }) {
             <TextArea showCount maxLength={1000} {...getFieldProps('description')} />
           </Form.Item>
 
-          <Form.Item label="Фото" valuePropName="fileList">
+          <Form.Item
+            label="Фото"
+            valuePropName="fileList"
+            htmlFor="images"
+            help={touched.images && errors.images ? errors.images : ''}
+            validateStatus={touched.images && errors.images ? 'error' : undefined}>
             <Upload
-              rules={[
-                {
-                  required: true,
-                  message: 'Це поле є обов`язковим',
-                },
-              ]}
+              {...getFieldProps('images')}
+              fileList={fileList}
               name="files[]"
               action={SERVER_URL + '/upload'}
               accept="image/*"
@@ -62,14 +76,43 @@ function ProductForm({ initialValues, submit }) {
                   axios.delete(`${SERVER_URL}/upload`, {
                     data: [info.file.response[0].key],
                   });
+                  const filterArrays = values.images.filter(
+                    ({ key }) => key !== info.file.response[0].key
+                  );
+                  setFieldValue('images', filterArrays);
                 }
                 if (info.file.status === 'done') {
-                  setFiles((file) => [...file, ...info.file.response]);
+                  setFieldValue('images', [...values.images, ...info.file.response]);
                 } else if (info.file.status === 'error') {
-                  message.error(`${info.file.name} file upload failed.`);
+                  message.error(`${info.file.key} file upload failed.`);
                 }
+                setFileList((prevFileList) => {
+                  return info.fileList.map((file) => {
+                    const mistake = prevFileList.find(
+                      (prevFile) => prevFile.status === 'done' && file.status === 'uploading'
+                    );
+                    if (mistake) {
+                      return { ...file, status: 'done', response: mistake.response };
+                    }
+                    return file;
+                  });
+                });
+              }}
+              onPreview={async (file) => {
+                let src = file.url;
+                if (!src) {
+                  src = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file.originFileObj);
+                    reader.onload = () => resolve(reader.result);
+                  });
+                }
+                const image = new Image();
+                image.src = src;
+                const imgWindow = window.open(src);
+                imgWindow?.document.write(image.outerHTML);
               }}>
-              {files.length < 12 && 'Завантажити'}
+              {values.images.length < 12 && 'Завантажити'}
             </Upload>
           </Form.Item>
 
@@ -148,7 +191,13 @@ function ProductForm({ initialValues, submit }) {
             htmlFor="phoneNumber"
             help={touched.phoneNumber && errors.phoneNumber ? errors.phoneNumber : ''}
             validateStatus={touched.phoneNumber && errors.phoneNumber ? 'error' : undefined}>
-            <Input placeholder="380664422765" {...getFieldProps('phoneNumber')} />
+            <PatternFormat
+              type="tel"
+              className={`form-control${touched.phone && errors.phone ? ' is-invalid' : ''}`}
+              {...getFieldProps('phoneNumber')}
+              format="+38 (###) ### ## ##"
+              mask="_"
+            />
           </Form.Item>
 
           <Form.Item
