@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Result } from 'antd';
 import { Link } from 'react-router-dom';
 
-const SuccessCreated = () => (
+const SuccessForm = () => (
   <Result
     status="success"
     title="Дякуємо за публікацію оголошення"
@@ -17,4 +17,4 @@ const SuccessCreated = () => (
   />
 );
 
-export default SuccessCreated;
+export default SuccessForm;

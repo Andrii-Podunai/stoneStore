@@ -54,7 +54,6 @@ async function updateById(id, doc, sub) {
   const error = new Error('you have no control over this card');
   error.status = 404;
   throw error;
-  0;
 }
 
 async function deleteById(id, sub) {
