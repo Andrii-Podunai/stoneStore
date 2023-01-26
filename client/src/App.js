@@ -7,6 +7,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Products from './pages/Products';
 import ProductPage from './pages/ProductPage';
 import CreateProductPage from 'pages/CreateProductPage/CreateProductPage';
+import ProfilePage from 'pages/ProfilePage/';
 import SuccessForm from 'pages/SuccessForm';
 import ProtectedRoute from 'components/ProtectedRoute';
 import EditProductPage from 'pages/EditProductPage';
@@ -26,6 +27,14 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<ProductPage />} />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/create"
             element={

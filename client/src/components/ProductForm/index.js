@@ -121,7 +121,7 @@ function ProductForm({ initialValues, submit }) {
             htmlFor="count"
             help={touched.count && errors.count ? errors.count : ''}
             validateStatus={touched.count && errors.count ? 'error' : undefined}>
-            <Input type="number" {...getFieldProps('count')} style={{ width: 150 }} />
+            <Input type="number" min="0" {...getFieldProps('count')} style={{ width: 150 }} />
           </Form.Item>
 
           <Form.Item
@@ -140,6 +140,7 @@ function ProductForm({ initialValues, submit }) {
                 </Select>
               }
               type="number"
+              min="0"
               {...getFieldProps('price')}
               style={{ width: 150 }}
             />
