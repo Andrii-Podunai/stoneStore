@@ -19,7 +19,15 @@ function Header() {
               <Link to="/create" className="btn btn-warning me-4">
                 Створити оголошення
               </Link>
-              <span className="me-1">{user.name}</span>
+              <Link to="/profile" className="linkLog me-1">
+                <img
+                  src={user.picture}
+                  alt={user.given_name}
+                  className="rounded-circle"
+                  width="45"
+                />
+              </Link>
+
               <button onClick={logout} type="button" className="btn btn-outline-success">
                 Log Out
               </button>

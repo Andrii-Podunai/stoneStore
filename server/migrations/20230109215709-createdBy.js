@@ -1,4 +1,4 @@
-export const up = async (db, client) => {
+export const up = async (db) => {
   return db
     .collection('cards')
     .updateMany(
@@ -7,7 +7,7 @@ export const up = async (db, client) => {
     );
 };
 
-export const down = async (db, client) => {
+export const down = async (db) => {
   return db
     .collection('cards')
     .updateMany(

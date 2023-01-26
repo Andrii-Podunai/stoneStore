@@ -11,6 +11,7 @@ function ProductPage() {
   const { id } = useParams();
   const dayjs = require('dayjs');
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   async function getResponse() {
     setLoading(true);
     const { data } = await axios.get(`${SERVER_URL}/cards/${id}`);
@@ -20,7 +21,7 @@ function ProductPage() {
 
   useEffect(() => {
     getResponse();
-  }, []);
+  }, [getResponse]);
   if (loading) {
     return (
       <div className="spinner-border" role="status">
