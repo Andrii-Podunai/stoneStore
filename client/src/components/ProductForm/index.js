@@ -19,7 +19,6 @@ function ProductForm({ initialValues, submit }) {
       };
     })
   );
-  console.log(fileList);
 
   return (
     <Formik
@@ -34,6 +33,7 @@ function ProductForm({ initialValues, submit }) {
       }}>
       {({ handleSubmit, touched, errors, getFieldProps, values, setFieldValue }) => (
         <Form
+          className="ps-2 pe-2"
           labelCol={{ span: 9 }}
           wrapperCol={{ span: 8 }}
           onFinish={handleSubmit}
