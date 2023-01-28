@@ -15,8 +15,8 @@ function Header() {
         </Link>
         <div className="Header-nav">
           {isAuthenticated === true ? (
-            <div className="navbar">
-              <Link to="/create" className="btn btn-warning me-4">
+            <div className="header-nav navbar">
+              <Link to="/create" className="create-btn btn btn-warning me-4">
                 Створити оголошення
               </Link>
               <Link to="/profile" className="linkLog me-1">
@@ -29,25 +29,25 @@ function Header() {
               </Link>
 
               <button onClick={logout} type="button" className="btn btn-outline-success">
-                Log Out
+                Вийти
               </button>
             </div>
           ) : (
-            <div className="navbar">
-              <Link to="/create" className="btn btn-warning me-4">
+            <div className="header-nav navbar">
+              <Link to="/create" className="create-btn btn btn-warning me-4">
                 Створити оголошення
               </Link>
               <button
                 onClick={loginWithRedirect}
                 type="button"
                 className="btn btn-outline-success me-1">
-                Log in
+                Логін
               </button>
               <button
                 onClick={() => loginWithRedirect({ screen_hint: 'signup' })}
                 type="button"
                 className="btn btn-outline-success ms-1">
-                Registration
+                Реєстрація
               </button>
             </div>
           )}

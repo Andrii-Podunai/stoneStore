@@ -53,7 +53,7 @@ function Home() {
             elem.images.length > 0 && elem.images[0].url ? elem.images[0].url : emptyImg;
           return (
             <li key={elem._id}>
-              <Link to={`/products/${elem._id}`}>
+              <Link className="text-decoration-none" to={`/products/${elem._id}`}>
                 <ProductCard
                   price={elem.price}
                   category={elem.category}

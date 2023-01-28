@@ -56,6 +56,7 @@ function EditProductPage() {
   useEffect(() => {
     getData();
     getUserAccessToken();
+    // eslint-disable-next-line
   }, []);
 
   function submit(value) {
