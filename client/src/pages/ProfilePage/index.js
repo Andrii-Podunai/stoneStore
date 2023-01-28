@@ -49,9 +49,8 @@ function ProfilePage() {
     };
 
     getUserAccessToken().then((token) => getUserCards(token));
-  }, [getIdTokenClaims, getUserCards]);
-
-  const deleteCardHandler = (elem, id) => {
+  }, [getIdTokenClaims]);
+  const deleteCardHandler = (id) => {
     const res = window.confirm('Ви впевнені, що хочете видалити запис?');
     if (res) {
       axios
@@ -71,9 +70,11 @@ function ProfilePage() {
     setUserFav([]);
   };
   const handleFilterValue = (e) => {
-    const value = e.target.getAttribute('data-id');
-    setSortBy(value);
-    setUserCards(filteredDataHandler(data, value));
+    if (e.target.tagName === 'LI') {
+      const value = e.target.getAttribute('data-id');
+      setSortBy(value);
+      setUserCards(filteredDataHandler(data, value));
+    }
   };
   const renderUserCards = (cards) => {
     return (
@@ -170,7 +171,7 @@ function ProfilePage() {
                 <button
                   className="btn btn-outline-danger m-2 py-2 text-decoration-none"
                   style={{ width: '120px' }}
-                  onClick={(e) => deleteCardHandler(e.target, _id)}>
+                  onClick={() => deleteCardHandler(_id)}>
                   Видалити
                 </button>
               </li>
