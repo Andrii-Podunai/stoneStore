@@ -1,5 +1,6 @@
 import CardRepositories from '../../repositories/cards.js';
 import Schemas from '../../schemas/index.js';
+import { deleteFromS3 } from '../../aws-s3-services/delete.js';
 
 function getCardsHandler(request, reply) {
   const query = {
@@ -45,7 +46,10 @@ function deleteCardHandler(request, reply) {
   const { id } = request.params;
 
   CardRepositories.deleteById(id, request.user.sub)
-    .then((data) => reply.code(200).send(data))
+    .then((data) => {
+      deleteFromS3(data);
+      reply.code(200).send(data);
+    })
     .catch((error) => reply.code(error.status || 500).send(error));
 }
 

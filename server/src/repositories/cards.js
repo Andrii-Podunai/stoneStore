@@ -60,8 +60,12 @@ async function deleteById(id, sub) {
   const myCard = await apps.findOne({ _id: ObjectId(id) });
 
   if (sub === myCard.createdBy) {
-    const res = await apps.deleteOne({ _id: ObjectId(id) });
-    return res.deletedCount > 0;
+    let imagesKey = [];
+    if (myCard.images[0] && myCard.images[0].key) {
+      imagesKey = myCard.images.map((image) => image.key);
+    }
+    await apps.deleteOne({ _id: ObjectId(id) });
+    return imagesKey;
   }
 
   const error = new Error('you have no control over this card');
@@ -70,7 +74,7 @@ async function deleteById(id, sub) {
 }
 
 function getMyCards(sub) {
-  return apps.find({ createdBy: sub }).toArray();
+  return apps.find({ createdBy: sub }).sort({ _id: -1 }).toArray();
 }
 
 function queryToDocument(query) {
@@ -95,4 +99,13 @@ function queryToDocument(query) {
   }, {});
 }
 
-export default { init, getMyCards, deleteById, getCount, updateById, create, getMany, getOne };
+export default {
+  init,
+  getMyCards,
+  deleteById,
+  getCount,
+  updateById,
+  create,
+  getMany,
+  getOne,
+};

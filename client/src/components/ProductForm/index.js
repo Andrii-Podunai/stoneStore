@@ -73,13 +73,15 @@ function ProductForm({ initialValues, submit }) {
               multiple
               onChange={(info) => {
                 if (info.file.status === 'removed') {
-                  axios.delete(`${SERVER_URL}/upload`, {
-                    data: [info.file.response[0].key],
-                  });
-                  const filterArrays = values.images.filter(
-                    ({ key }) => key !== info.file.response[0].key
-                  );
-                  setFieldValue('images', filterArrays);
+                  if (info.file.response[0]) {
+                    axios.delete(`${SERVER_URL}/upload`, {
+                      data: [info.file.response[0].key],
+                    });
+                    const filterArrays = values.images.filter(
+                      ({ key }) => key !== info.file.response[0].key
+                    );
+                    setFieldValue('images', filterArrays);
+                  }
                 }
                 if (info.file.status === 'done') {
                   setFieldValue('images', [...values.images, ...info.file.response]);
@@ -89,7 +91,10 @@ function ProductForm({ initialValues, submit }) {
                 setFileList((prevFileList) => {
                   return info.fileList.map((file) => {
                     const mistake = prevFileList.find(
-                      (prevFile) => prevFile.status === 'done' && file.status === 'uploading'
+                      (prevFile) =>
+                        prevFile.uid === file.uid &&
+                        prevFile.status === 'done' &&
+                        file.status === 'uploading'
                     );
                     if (mistake) {
                       return { ...file, status: 'done', response: mistake.response };

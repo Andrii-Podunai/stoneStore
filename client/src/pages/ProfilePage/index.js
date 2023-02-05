@@ -6,6 +6,7 @@ import axios from 'axios';
 import { SERVER_URL } from 'variables';
 import ProductCard from '../../components/ProductCard';
 import emptyImg from '../../images/emptyImage.png';
+import ModalFavorites from '../../components/Modal';
 
 function ProfilePage() {
   const { user } = useAuth0();
@@ -16,6 +17,37 @@ function ProfilePage() {
   const [userCards, setUserCards] = useState([]);
   const [sortBy, setSortBy] = useState('active');
   const [renderPage, setRenderPage] = useState('user-cards');
+  const [favorites, setFavorites] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [favoriteCurrentId, setFavoriteCurrentId] = useState('');
+
+  const handleModalCancel = (e) => {
+    e.preventDefault();
+    setOpenModal(false);
+    setFavoriteCurrentId('');
+  };
+
+  const handleModalOk = (e) => {
+    e.preventDefault();
+    axios
+      .patch(`${SERVER_URL}/my/favorites`, JSON.stringify(favoriteCurrentId), {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        setFavorites((prevState) => prevState.filter((id) => id !== favoriteCurrentId));
+        setUserFav((prevState) => prevState.filter(({ _id }) => _id !== favoriteCurrentId));
+      })
+      .catch((error) => console.log('error', error));
+    setOpenModal(false);
+  };
+
+  const showModal = (id) => {
+    setOpenModal(true);
+    setFavoriteCurrentId(id);
+  };
 
   const filteredDataHandler = (data, value) =>
     data.filter(({ status }) => {
@@ -37,6 +69,25 @@ function ProfilePage() {
       .catch((error) => console.log('error', error));
   };
 
+  const getMyFavorites = (token) => {
+    if (token === false) {
+      return;
+    }
+    axios
+      .get(`${SERVER_URL}/my/favorites`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(({ data }) => {
+        if (!data || !data.favorites) {
+          return;
+        }
+        setFavorites(data.favorites);
+      })
+      .catch((error) => console.log('error', error));
+  };
+
   useEffect(() => {
     const getUserAccessToken = async () => {
       try {
@@ -48,7 +99,11 @@ function ProfilePage() {
       }
     };
 
-    getUserAccessToken().then((token) => getUserCards(token));
+    getUserAccessToken().then((token) => {
+      getUserCards(token);
+      getMyFavorites(token);
+    });
+    // eslint-disable-next-line
   }, [getIdTokenClaims]);
   const deleteCardHandler = (id) => {
     const res = window.confirm('Ви впевнені, що хочете видалити запис?');
@@ -67,7 +122,20 @@ function ProfilePage() {
   const handleProfilePage = (e) => {
     const value = e.target.getAttribute('data-id');
     setRenderPage(value);
-    setUserFav([]);
+    if (favorites === false) {
+      return;
+    }
+    if (value === 'user-fav') {
+      favorites.forEach((id) => {
+        axios.get(`${SERVER_URL}/cards/${id}`).then(({ data }) => {
+          setUserFav((prev) => {
+            return [...prev, data];
+          });
+        });
+      });
+    } else {
+      setUserFav([]);
+    }
   };
   const handleFilterValue = (e) => {
     if (e.target.tagName === 'LI') {
@@ -150,32 +218,36 @@ function ProfilePage() {
           </div>
         ) : (
           <ul className="list-unstyled d-flex gap-3 flex-wrap pt-3 pb-3">
-            {cards.map(({ _id, price, images, category, title, currency, type }) => (
-              <li key={_id} className="border border-rounded pb-2">
-                <Link to={'/products/' + _id} className="text-decoration-none border-rounded">
-                  <ProductCard
-                    price={price}
-                    category={category}
-                    title={title}
-                    image={images.length > 0 && images[0].url ? images[0].url : emptyImg}
-                    currency={currency}
-                    type={type}
-                  />
-                </Link>
-                <Link
-                  className="btn btn-outline-success m-2 py-2 text-decoration-none"
-                  style={{ width: '120px' }}
-                  to={`/products/${_id}/edit`}>
-                  Редагувати
-                </Link>
-                <button
-                  className="btn btn-outline-danger m-2 py-2 text-decoration-none"
-                  style={{ width: '120px' }}
-                  onClick={() => deleteCardHandler(_id)}>
-                  Видалити
-                </button>
-              </li>
-            ))}
+            {cards.map(({ _id, price, images, category, title, currency, type }) => {
+              return (
+                <li key={_id} className="border border-rounded pb-2">
+                  <Link to={'/products/' + _id} className="text-decoration-none border-rounded">
+                    <ProductCard
+                      price={price}
+                      category={category}
+                      title={title}
+                      image={images.length > 0 && images[0].url ? images[0].url : emptyImg}
+                      currency={currency}
+                      type={type}
+                      favorite={false}
+                      userToken={false}
+                    />
+                  </Link>
+                  <Link
+                    className="btn btn-outline-success m-2 py-2 text-decoration-none"
+                    style={{ width: '120px' }}
+                    to={`/products/${_id}/edit`}>
+                    Редагувати
+                  </Link>
+                  <button
+                    className="btn btn-outline-danger m-2 py-2 text-decoration-none"
+                    style={{ width: '120px' }}
+                    onClick={() => deleteCardHandler(_id)}>
+                    Видалити
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         )}
       </>
@@ -197,11 +269,39 @@ function ProfilePage() {
       );
     } else {
       return (
-        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 py-3">
-          {userCards.map(() => (
-            <div className="col">INFO ABOUT YOUR FAV ITEM</div>
-          ))}
-        </div>
+        <>
+          <ModalFavorites
+            handleOk={handleModalOk}
+            open={openModal}
+            handleCancel={handleModalCancel}
+          />
+          <ul className="list-unstyled d-flex gap-3 flex-wrap pt-3 pb-3">
+            {fav.map(({ _id, price, images, category, title, currency, type }) => {
+              return (
+                <li key={_id} className="border border-rounded pb-2">
+                  <Link to={'/products/' + _id} className="text-decoration-none border-rounded">
+                    <ProductCard
+                      price={price}
+                      category={category}
+                      title={title}
+                      image={images.length > 0 && images[0].url ? images[0].url : emptyImg}
+                      currency={currency}
+                      type={type}
+                      favorite={false}
+                      userToken={false}
+                    />
+                  </Link>
+                  <button
+                    className="btn btn-outline-primary m-2 py-2 text-decoration-none"
+                    style={{ width: '200px' }}
+                    onClick={() => showModal(_id)}>
+                    Прибрати з обраних
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </>
       );
     }
   };
@@ -219,10 +319,9 @@ function ProfilePage() {
         </header>
         <section className="album py-3 bg-light profile-body">
           <div className="container">
-            <ul
-              className="nav nav-pills d-flex justify-content-center py-3"
-              onClick={handleProfilePage}>
+            <ul className="nav nav-pills d-flex justify-content-center py-3">
               <li
+                onClick={handleProfilePage}
                 className={
                   'nav-item m-2 cursor-pointer ' +
                   (renderPage === 'user-cards' ? 'text-success' : 'text-secondary')
@@ -231,6 +330,7 @@ function ProfilePage() {
                 Ваші оголошення
               </li>
               <li
+                onClick={handleProfilePage}
                 className={
                   'nav-item m-2 cursor-pointer ' +
                   (renderPage === 'user-fav' ? 'text-success' : 'text-secondary')

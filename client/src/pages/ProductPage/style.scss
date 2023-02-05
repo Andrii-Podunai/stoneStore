@@ -38,6 +38,12 @@
       right: 0;
     }
   }
+  &-star{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+  }
 
   & img {
     width: 100%;

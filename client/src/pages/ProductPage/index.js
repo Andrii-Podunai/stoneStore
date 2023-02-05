@@ -4,8 +4,13 @@ import axios from 'axios';
 import { Carousel } from 'antd';
 import './style.scss';
 import { SERVER_URL } from 'variables';
+import FavoriteService from '../../components/FavoriteService';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function ProductPage() {
+  const { getIdTokenClaims } = useAuth0();
+  const [token, setToken] = useState(false);
+  const [favorite, setFavorite] = useState(false);
   const [product, setProduct] = useState();
   const [loading, setLoading] = useState();
   const { id } = useParams();
@@ -17,6 +22,35 @@ function ProductPage() {
     setLoading(false);
     setProduct(data);
   }
+
+  useEffect(() => {
+    getIdTokenClaims()
+      .then((response) => setToken(response.__raw))
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, [getIdTokenClaims]);
+
+  useEffect(() => {
+    if (token === false) {
+      return;
+    }
+    axios
+      .get(`${SERVER_URL}/my/favorites`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(({ data }) => {
+        if (!data || !data.favorites) {
+          return;
+        }
+        if (data.favorites.includes(id)) {
+          setFavorite(true);
+        }
+      })
+      .catch((error) => console.log('error', error));
+  }, [token, id]);
 
   useEffect(() => {
     getResponse();
@@ -45,7 +79,10 @@ function ProductPage() {
     <div className="product-main">
       <div className="product">
         <div className="product-img">
-          <Carousel arrows dots={false} prevArrow={<button />} nextArrow={<button />}>
+          <div className="product-star">
+            <FavoriteService fill={favorite} token={token} id={id} />
+          </div>
+          <Carousel autoplay arrows dots={false} prevArrow={<button />} nextArrow={<button />}>
             {' '}
             {(product.images || []).map((image) => (
               <img key={image.key} src={image.url} alt="img" />

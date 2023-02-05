@@ -3,4 +3,10 @@
   width: 100%;
   font-family: Roboto, sans-serif;
   max-height: 480px;
+  position: relative;
+}
+.productCard-star{
+  position: absolute;
+  top: 5px;
+  right: 10px;
 }
