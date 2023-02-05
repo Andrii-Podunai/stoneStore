@@ -65,3 +65,15 @@ export async function requestGetCount(category, type, search): Promise<number> {
   });
   return response.data;
 }
+
+export async function requestGetFavorite(token): Promise<number> {
+  const response = await axios.get(`${SERVER_URL}/my/favorites`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.data || !response.data.favorites) {
+    throw new Error('no data');
+  }
+  return response.data.favorites;
+}

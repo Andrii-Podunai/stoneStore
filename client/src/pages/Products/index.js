@@ -2,13 +2,18 @@
 
 import * as React from 'react';
 import { Pagination } from 'antd';
-import { requestGetQuery, requestGetCount } from './requests';
+import { requestGetQuery, requestGetCount, requestGetFavorite } from './requests';
 import ProductCard from 'components/ProductCard';
 import emptyImg from 'images/emptyImage.png';
 import { Link, useSearchParams } from 'react-router-dom';
 import ProductsFilter from './ProductsFilter';
+import { useAuth0 } from '@auth0/auth0-react';
+import { useState } from 'react';
 
 function Products(): React.Node {
+  const { getIdTokenClaims } = useAuth0();
+  const [favorites, setFavorites] = useState(false);
+  const [token, setToken] = useState(false);
   const [categoryValue, setCategoryValue] = React.useState<string>('');
   const [typeValue, setTypeValue] = React.useState<string>('all');
   const [searchValue, setSearchValue] = React.useState<string>('');
@@ -32,6 +37,22 @@ function Products(): React.Node {
       setTypeValue(type);
     }
   }, [searchParams]);
+
+  React.useEffect(() => {
+    getIdTokenClaims()
+      .then((response) => {
+        if (!response.__raw) {
+          return;
+        }
+        requestGetFavorite(response.__raw).then((favorites) => {
+          setToken(response.__raw);
+          setFavorites(favorites);
+        });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, [getIdTokenClaims]);
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -73,16 +94,23 @@ function Products(): React.Node {
         <div className="row mx-auto gap-3 py-3">
           {currentData.map(({ _id, price, images, category, title, currency, type }) => {
             const image = images.length > 0 && images[0].url ? images[0].url : emptyImg;
+            let favorite = false;
+            if (favorites !== false) {
+              favorite = favorites.includes(_id);
+            }
             return (
               <div key={_id} className="col p-0 d-flex justify-content-center">
                 <Link to={_id} className="w-100 text-decoration-none">
                   <ProductCard
+                    id={_id}
                     price={price}
                     category={category}
                     title={title}
                     image={image}
                     currency={currency}
                     type={type}
+                    favorite={favorite}
+                    userToken={token}
                   />
                 </Link>
               </div>
