@@ -6,7 +6,9 @@ import { SERVER_URL } from 'variables';
 export async function requestGetQuery(
   page: number,
   amount: number,
-  category: string
+  category: string,
+  type: string,
+  search: string
 ): Promise<
   Array<{
     _id: string,
@@ -35,13 +37,31 @@ export async function requestGetQuery(
   if (category !== 'all') {
     params.category = category;
   }
+  if (type !== 'all') {
+    params.type = type;
+  }
+  if (search !== '') {
+    params.search = search;
+  }
   const response = await axios.get(`${SERVER_URL}/cards`, {
     params: params,
   });
   return response.data;
 }
 
-export async function requestGetCount(): Promise<number> {
-  const response = await axios.get(`${SERVER_URL}/cards/count`);
+export async function requestGetCount(category, type, search): Promise<number> {
+  let params = {};
+  if (category !== 'all') {
+    params.category = category;
+  }
+  if (type !== 'all') {
+    params.type = type;
+  }
+  if (search !== '') {
+    params.search = search;
+  }
+  const response = await axios.get(`${SERVER_URL}/cards/count`, {
+    params: params,
+  });
   return response.data;
 }
