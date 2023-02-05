@@ -47,13 +47,13 @@ function Home() {
         </Col>
       </Row>
       <h3 className="PageHeader">Останні оголошення</h3>
-      <ul className="container d-flex justify-content-center flex-wrap gap-3 list-unstyled pt-3 pb-3">
+      <ul className="container row mx-auto gap-3 list-unstyled py-3">
         {data.map((elem) => {
           const image =
             elem.images.length > 0 && elem.images[0].url ? elem.images[0].url : emptyImg;
           return (
-            <li key={elem._id}>
-              <Link className="text-decoration-none" to={`/products/${elem._id}`}>
+            <li key={elem._id} className="col p-0 d-flex justify-content-center">
+              <Link className="w-100 text-decoration-none" to={`/products/${elem._id}`}>
                 <ProductCard
                   price={elem.price}
                   category={elem.category}

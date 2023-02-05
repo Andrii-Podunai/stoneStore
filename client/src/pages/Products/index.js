@@ -1,60 +1,44 @@
 //@flow
 
 import * as React from 'react';
-import { Pagination, Radio } from 'antd';
+import { Pagination } from 'antd';
 import { requestGetQuery, requestGetCount } from './requests';
 import ProductCard from 'components/ProductCard';
 import emptyImg from 'images/emptyImage.png';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-
-const radioOptions = [
-  {
-    label: 'Всі',
-    value: 'all',
-  },
-  {
-    label: 'Скло',
-    value: 'glass',
-  },
-  {
-    label: 'Папір',
-    value: 'paper',
-  },
-  {
-    label: 'Метал',
-    value: 'metal',
-  },
-  {
-    label: 'Пластик',
-    value: 'plastic',
-  },
-];
+import { Link, useSearchParams } from 'react-router-dom';
+import ProductsFilter from './ProductsFilter';
 
 function Products(): React.Node {
   const [categoryValue, setCategoryValue] = React.useState<string>('');
+  const [typeValue, setTypeValue] = React.useState<string>('all');
+  const [searchValue, setSearchValue] = React.useState<string>('');
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [pageSize, setPageSize] = React.useState<number>(24);
   const [activeCardsCount, setActiveCardsCount] = React.useState<number>(24);
   const [currentData, setCurrentData] = React.useState<Array<Object>>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
 
   React.useMemo(() => {
     const category = searchParams.get('category');
+    const type = searchParams.get('type');
     if (category !== null) {
       setCategoryValue(category);
-    } else {
+    }
+    if (category === null) {
       setCategoryValue('all');
+    }
+    if (type !== null) {
+      setTypeValue(type);
     }
   }, [searchParams]);
 
   React.useEffect(() => {
     setIsLoading(true);
-    requestGetCount().then((data) => {
+    requestGetCount(categoryValue, typeValue, searchValue).then((data) => {
       setActiveCardsCount(data);
     });
-    requestGetQuery(currentPage, pageSize, categoryValue)
+    requestGetQuery(currentPage, pageSize, categoryValue, typeValue, searchValue)
       .then((data) => {
         setCurrentData(data);
         setIsLoading(false);
@@ -62,7 +46,7 @@ function Products(): React.Node {
       .catch((error) => {
         console.log(error);
       });
-  }, [currentPage, pageSize, categoryValue]);
+  }, [currentPage, pageSize, categoryValue, typeValue, searchValue]);
 
   const onChangePage = (page: number) => {
     setCurrentPage(page);
@@ -72,27 +56,26 @@ function Products(): React.Node {
     setPageSize(pageSize);
   };
 
-  const onChangeCategory = ({ target: { value } }: Object) => {
-    navigate(`?category=${value}`);
+  const handleSearch = (value) => {
+    setSearchValue(value);
   };
 
   if (isLoading === false) {
     return (
       <div className="container pb-3">
-        <Radio.Group
-          className="pt-5 pb-3"
-          options={radioOptions}
-          onChange={onChangeCategory}
-          value={categoryValue}
-          optionType="button"
-          buttonStyle="solid"
-        />
-        <ul className="list-unstyled d-flex gap-3 flex-wrap justify-content-center pt-3 pb-3">
+        <div className="pt-5 pb-3">
+          <ProductsFilter
+            categoryValue={categoryValue}
+            typeValue={typeValue}
+            onSearch={handleSearch}
+          />
+        </div>
+        <div className="row mx-auto gap-3 py-3">
           {currentData.map(({ _id, price, images, category, title, currency, type }) => {
             const image = images.length > 0 && images[0].url ? images[0].url : emptyImg;
             return (
-              <li key={_id}>
-                <Link to={_id} className="text-decoration-none">
+              <div key={_id} className="col p-0 d-flex justify-content-center">
+                <Link to={_id} className="w-100 text-decoration-none">
                   <ProductCard
                     price={price}
                     category={category}
@@ -102,10 +85,10 @@ function Products(): React.Node {
                     type={type}
                   />
                 </Link>
-              </li>
+              </div>
             );
           })}
-        </ul>
+        </div>
         <Pagination
           current={currentPage}
           onChange={onChangePage}
@@ -121,14 +104,13 @@ function Products(): React.Node {
 
   return (
     <div className="container pb-3">
-      <Radio.Group
-        className="pt-5 pb-3"
-        options={radioOptions}
-        onChange={onChangeCategory}
-        value={categoryValue}
-        optionType="button"
-        buttonStyle="solid"
-      />
+      <div className="pt-5 pb-3">
+        <ProductsFilter
+          categoryValue={categoryValue}
+          typeValue={typeValue}
+          onSearch={handleSearch}
+        />
+      </div>
       <div className="text-center mt-4 mb-4">
         <div className="spinner-border" role="status"></div>
       </div>

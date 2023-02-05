@@ -25,8 +25,8 @@ function getMany({ page, amount = 50 }, query) {
   throw new Error("Query 'page' dont send");
 }
 
-function getCount() {
-  return apps.count({ status: 'Active' });
+function getCount(query) {
+  return apps.count({ ...queryToDocument(query) }); //when admin will be ready: "status: 'Active'"
 }
 
 async function getOne(id) {
@@ -80,6 +80,9 @@ function queryToDocument(query) {
     },
     category: function (value) {
       return { category: value };
+    },
+    search: function (value) {
+      return { title: { $regex: value, $options: 'i' } };
     },
   };
 

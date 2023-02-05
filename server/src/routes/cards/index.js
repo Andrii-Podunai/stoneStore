@@ -5,6 +5,7 @@ function getCardsHandler(request, reply) {
   const query = {
     type: request.query.type,
     category: request.query.category,
+    search: request.query.search,
   };
   CardRepositories.getMany(request.query, query)
     .then((data) => reply.code(200).send(data))
@@ -12,7 +13,7 @@ function getCardsHandler(request, reply) {
 }
 
 function getCountHandler(request, reply) {
-  CardRepositories.getCount()
+  CardRepositories.getCount(request.query)
     .then((data) => reply.code(200).send(data))
     .catch((error) => reply.code(error.status || 500).send(error));
 }
