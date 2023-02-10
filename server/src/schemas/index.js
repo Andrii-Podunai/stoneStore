@@ -102,9 +102,23 @@ const updateCard = {
       type: Card.properties.type,
     },
   },
-  // response: {
-  //   200: Card,
-  // },
+};
+
+const updateStatus = {
+  params: {
+    type: 'object',
+    required: ['id'],
+    properties: {
+      id: Card.properties._id,
+    },
+  },
+  body: {
+    type: 'object',
+    required: ['value'],
+    properties: {
+      value: Card.properties.status,
+    },
+  },
 };
 
 const deleteCard = {
@@ -117,4 +131,4 @@ const deleteCard = {
   },
 };
 
-export default { getCard, createCard, getCount, updateCard, deleteCard, getCards };
+export default { getCard, createCard, updateStatus, getCount, updateCard, deleteCard, getCards };

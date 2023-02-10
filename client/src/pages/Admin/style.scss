@@ -1,0 +1,45 @@
+.Admin {
+    &-text {
+        margin-right: 20px;
+
+        &-btn {
+            margin-right: 10px;
+        }
+    }
+    margin-top: 60px;
+}
+
+li {
+    list-style: none;
+    display: inline-block;
+}
+
+ul {
+    text-align: center;
+}
+
+table,
+th,
+td {
+    border: 0.1rem solid #198754;
+    text-align: center;
+    color: #198754;
+    font-size: 20px;
+}
+
+table {
+    width: 80%;
+    margin: 0 auto;
+}
+
+th {
+    padding: 15px 15px;
+}
+
+td {
+    padding: 10px 10px;
+}
+
+button {
+    margin-top: 5px;
+}

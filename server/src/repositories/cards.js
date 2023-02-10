@@ -56,6 +56,10 @@ async function updateById(id, doc, sub) {
   throw error;
 }
 
+async function updateStatusCard(id, status) {
+  const res = await apps.updateOne({ _id: ObjectId(id) }, { $set: { status: status } });
+  return res.acknowledged;
+}
 async function deleteById(id, sub) {
   const myCard = await apps.findOne({ _id: ObjectId(id) });
 
@@ -103,6 +107,7 @@ export default {
   init,
   getMyCards,
   deleteById,
+  updateStatusCard,
   getCount,
   updateById,
   create,
