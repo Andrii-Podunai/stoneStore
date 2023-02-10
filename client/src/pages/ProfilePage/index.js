@@ -6,7 +6,7 @@ import axios from 'axios';
 import { SERVER_URL } from 'variables';
 import ProductCard from '../../components/ProductCard';
 import emptyImg from '../../images/emptyImage.png';
-import ModalFavorites from '../../components/Modal';
+import ModalComponent from '../../components/Modal';
 
 function ProfilePage() {
   const { user } = useAuth0();
@@ -270,7 +270,8 @@ function ProfilePage() {
     } else {
       return (
         <>
-          <ModalFavorites
+          <ModalComponent
+            title="Ви справді хочете прибрати з обраних?"
             handleOk={handleModalOk}
             open={openModal}
             handleCancel={handleModalCancel}

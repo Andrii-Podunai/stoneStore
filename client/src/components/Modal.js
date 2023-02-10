@@ -1,10 +1,10 @@
 import { Button, Modal } from 'antd';
 
-function ModalFavorites({ open = false, handleOk, handleCancel }) {
+function ModalComponent({ open = false, title, handleOk, handleCancel }) {
   return (
     <Modal
       Modal
-      title="Ви справді хочете прибрати з обраних?"
+      title={title}
       open={open}
       onOk={handleOk}
       onCancel={handleCancel}
@@ -20,4 +20,4 @@ function ModalFavorites({ open = false, handleOk, handleCancel }) {
   );
 }
 
-export default ModalFavorites;
+export default ModalComponent;
