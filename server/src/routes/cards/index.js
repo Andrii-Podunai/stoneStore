@@ -36,10 +36,14 @@ function createCardHandler(request, reply) {
 
 function updateCardHandler(request, reply) {
   const { id } = request.params;
-
   CardRepositories.updateById(id, request.body, request.user.sub)
     .then(() => reply.code(200).send())
     .catch((error) => reply.code(error.status || 500).send(error));
+}
+
+function updateCardStatus(request, reply) {
+  const { id } = request.params;
+  CardRepositories.updateStatusCard(id, request.body.value).then(() => reply.code(200).send());
 }
 
 function deleteCardHandler(request, reply) {
@@ -85,6 +89,12 @@ export default (fastify, __, done) => {
     preValidation: fastify.authenticate,
     schema: Schemas.updateCard,
     handler: updateCardHandler,
+  });
+  fastify.route({
+    method: 'PUT',
+    url: '/:id/status',
+    schema: Schemas.updateStatus,
+    handler: updateCardStatus,
   });
   fastify.route({
     method: 'DELETE',
