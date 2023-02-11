@@ -3,7 +3,7 @@ import axios from 'axios';
 import { SERVER_URL } from '../variables';
 import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import ModalFavorites from './Modal';
+import ModalComponent from './Modal';
 
 function FavoriteService({ fill, token, id }) {
   const [openModal, setOpenModal] = useState(false);
@@ -60,7 +60,12 @@ function FavoriteService({ fill, token, id }) {
   return (
     <>
       <Star fill={currentFill} onClick={handleClick} />
-      <ModalFavorites handleOk={handleOk} open={openModal} handleCancel={handleCancel} />
+      <ModalComponent
+        handleOk={handleOk}
+        title="Ви справді хочете прибрати з обраних?"
+        open={openModal}
+        handleCancel={handleCancel}
+      />
     </>
   );
 }
