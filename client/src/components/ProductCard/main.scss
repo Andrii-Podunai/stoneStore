@@ -1,6 +1,9 @@
 .home-cards{
   min-width: 300px;
   width: 100%;
+  @media (min-width: 768px) {
+   max-width: 362px;
+  }
   font-family: Roboto, sans-serif;
   max-height: 480px;
   position: relative;

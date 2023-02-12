@@ -12,9 +12,9 @@ function getMyFavorites(sub) {
 
 function addMyFavorites(sub, favoriteCard) {
   return apps.updateOne(
-      { _id: sub },
-      { $push: { favorites: { $each: [favoriteCard], $position: 0 } } },
-      { upsert: true }
+    { _id: sub },
+    { $push: { favorites: { $each: [favoriteCard], $position: 0 } } },
+    { upsert: true }
   );
 }
 
@@ -23,4 +23,3 @@ function removeMyFavorites(sub, favoriteCard) {
 }
 
 export default { init, getMyFavorites, addMyFavorites, removeMyFavorites };
-
