@@ -6,6 +6,7 @@ import './style.scss';
 import { SERVER_URL } from 'variables';
 import FavoriteService from '../../components/FavoriteService';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Image } from 'antd';
 
 function ProductPage() {
   const { getIdTokenClaims } = useAuth0();
@@ -83,9 +84,8 @@ function ProductPage() {
             <FavoriteService fill={favorite} token={token} id={id} />
           </div>
           <Carousel autoplay arrows dots={false} prevArrow={<button />} nextArrow={<button />}>
-            {' '}
             {(product.images || []).map((image) => (
-              <img key={image.key} src={image.url} alt="img" />
+              <Image key={image.key} src={image.url} alt="img" className="product-img--style" />
             ))}
           </Carousel>
         </div>
