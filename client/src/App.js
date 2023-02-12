@@ -12,6 +12,7 @@ import SuccessForm from 'pages/SuccessForm';
 import ProtectedRoute from 'components/ProtectedRoute';
 import EditProductPage from 'pages/EditProductPage';
 import Admin from 'pages/Admin/Admin';
+import Contacts from 'pages/Contacts';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -45,6 +46,7 @@ function App() {
           <Route path="/products/:id/edit" element={<EditProductPage />} />
           <Route path="/successfully" element={<SuccessForm />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/contacts" element={<Contacts />} />
         </Routes>
       </main>
       <Footer />
