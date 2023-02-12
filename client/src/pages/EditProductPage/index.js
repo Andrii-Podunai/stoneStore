@@ -44,6 +44,7 @@ function EditProductPage() {
       images,
     });
   }
+
   const getUserAccessToken = async () => {
     try {
       const accessToken = await getIdTokenClaims();
@@ -74,6 +75,7 @@ function EditProductPage() {
         console.error(error.message);
       });
   }
+
   if (loading) {
     return (
       <div className="spinner-border" role="status">
@@ -84,4 +86,5 @@ function EditProductPage() {
 
   return <ProductForm initialValues={initialValues} submit={submit} />;
 }
+
 export default EditProductPage;
