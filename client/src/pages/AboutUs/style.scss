@@ -1,0 +1,77 @@
+.about-main {
+    padding: 8em;
+    background-color: #198754;
+    text-align: center;
+    color: #f8f9fa;
+
+    &--title {
+        font-size: 3.5rem;
+    }
+
+    &--text {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 300;
+    }
+}
+
+.about-mission {
+    padding: 5em;
+
+    &_wrp {
+        padding: 4em;
+        background-color: rgba(177, 177, 177, 0.2);
+
+        &--title {
+            font-size: 30px;
+            margin-bottom: 35px;
+        }
+
+        &--text {
+            margin: 0;
+            font-weight: 300;
+            font-size: 20px;
+        }
+    }
+}
+
+.about-warning {
+    padding: 20px;
+
+    &--text {
+        margin: 0;
+        font-weight: 300;
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .about-main {
+        padding: 4em;
+
+        &--title {
+            font-size: 3rem;
+        }
+
+        &--text {
+            font-size: 1rem;
+        }
+    }
+
+    .about-mission {
+        padding: 3em;
+
+        &_wrp {
+            padding: 2em;
+
+            &--title {
+                font-size: 24px;
+                margin-bottom: 25px;
+            }
+
+            &--text {
+                font-size: 18px;
+            }
+        }
+    }
+}
