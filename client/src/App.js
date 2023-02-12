@@ -14,6 +14,7 @@ import EditProductPage from 'pages/EditProductPage';
 import Admin from 'pages/Admin/Admin';
 import AboutUs from 'pages/AboutUs';
 import Contacts from 'pages/Contacts';
+import PrivacyPolicy from 'pages/PrivacyPolicy';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -49,6 +50,7 @@ function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contacts" element={<Contacts />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes>
       </main>
       <Footer />
