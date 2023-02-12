@@ -8,12 +8,11 @@ import emptyImg from 'images/emptyImage.png';
 import { Link, useSearchParams } from 'react-router-dom';
 import ProductsFilter from './ProductsFilter';
 import { useAuth0 } from '@auth0/auth0-react';
-import { useState } from 'react';
 
 function Products(): React.Node {
   const { getIdTokenClaims } = useAuth0();
-  const [favorites, setFavorites] = useState(false);
-  const [token, setToken] = useState(false);
+  const [favorites, setFavorites] = React.useState(false);
+  const [token, setToken] = React.useState(false);
   const [categoryValue, setCategoryValue] = React.useState<string>('');
   const [typeValue, setTypeValue] = React.useState<string>('all');
   const [searchValue, setSearchValue] = React.useState<string>('');
@@ -53,6 +52,10 @@ function Products(): React.Node {
         console.log(err.message);
       });
   }, [getIdTokenClaims]);
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [categoryValue, typeValue, searchValue]);
 
   React.useEffect(() => {
     setIsLoading(true);

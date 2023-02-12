@@ -127,11 +127,23 @@ function ProfilePage() {
     }
     if (value === 'user-fav') {
       favorites.forEach((id) => {
-        axios.get(`${SERVER_URL}/cards/${id}`).then(({ data }) => {
-          setUserFav((prev) => {
-            return [...prev, data];
+        axios
+          .get(`${SERVER_URL}/cards/${id}`)
+          .then(({ data }) => {
+            setUserFav((prev) => {
+              return [...prev, data];
+            });
+          })
+          .catch((e) => {
+            if (e.response.status === 404) {
+              axios.patch(`${SERVER_URL}/my/favorites`, JSON.stringify(id), {
+                headers: {
+                  'Content-Type': 'application/json',
+                  Authorization: `Bearer ${token}`,
+                },
+              });
+            }
           });
-        });
       });
     } else {
       setUserFav([]);
@@ -220,7 +232,7 @@ function ProfilePage() {
           <ul className="list-unstyled d-flex gap-3 flex-wrap pt-3 pb-3 justify-content-center justify-content-md-start">
             {cards.map(({ _id, price, images, category, title, currency, type }) => {
               return (
-                <li key={_id} className="border border-rounded pb-2">
+                <li key={_id} className="profile-cards-item border border-rounded pb-2">
                   <Link to={'/products/' + _id} className="text-decoration-none border-rounded">
                     <ProductCard
                       price={price}
@@ -278,7 +290,7 @@ function ProfilePage() {
           <ul className="list-unstyled d-flex gap-3 flex-wrap pt-3 pb-3">
             {fav.map(({ _id, price, images, category, title, currency, type }) => {
               return (
-                <li key={_id} className="border border-rounded pb-2">
+                <li key={_id} className="profile-cards-item border border-rounded pb-2">
                   <Link to={'/products/' + _id} className="text-decoration-none border-rounded">
                     <ProductCard
                       price={price}
