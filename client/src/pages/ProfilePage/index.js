@@ -1,13 +1,10 @@
 import './style.scss';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { SERVER_URL } from 'variables';
-import ProductCard from '../../components/ProductCard';
-import emptyImg from '../../images/emptyImage.png';
-import ModalComponent from '../../components/Modal';
-
+import renderUserCards from './cardsPage';
+import renderUserFav from './favoritePage';
 function ProfilePage() {
   const { user } = useAuth0();
   const { getIdTokenClaims } = useAuth0();
@@ -15,79 +12,89 @@ function ProfilePage() {
   const [token, setToken] = useState([]);
   const [data, setData] = useState([]);
   const [userCards, setUserCards] = useState([]);
+  const [userFav, setUserFav] = useState([]);
   const [sortBy, setSortBy] = useState('active');
   const [renderPage, setRenderPage] = useState('user-cards');
-  const [favorites, setFavorites] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [favoriteCurrentId, setFavoriteCurrentId] = useState('');
-
+  const [modalCurrentId, setModalCurrentId] = useState('');
+  const showModal = (id) => {
+    setOpenModal(true);
+    setModalCurrentId(id);
+  };
   const handleModalCancel = (e) => {
     e.preventDefault();
     setOpenModal(false);
-    setFavoriteCurrentId('');
+    setModalCurrentId('');
   };
-
-  const handleModalOk = (e) => {
+  const handleRemoveCards = (e) => {
     e.preventDefault();
     axios
-      .patch(`${SERVER_URL}/my/favorites`, JSON.stringify(favoriteCurrentId), {
+      .delete(`${SERVER_URL}/cards/${modalCurrentId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => getUserCards(token))
+      .catch((error) => console.log('error', error));
+    setOpenModal(false);
+  };
+  const handleRemoveFav = (e) => {
+    e.preventDefault();
+    axios
+      .patch(`${SERVER_URL}/my/favorites`, JSON.stringify(modalCurrentId), {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
       })
       .then(() => {
-        setFavorites((prevState) => prevState.filter((id) => id !== favoriteCurrentId));
-        setUserFav((prevState) => prevState.filter(({ _id }) => _id !== favoriteCurrentId));
+        setUserFav((prevState) => prevState.filter(({ _id }) => _id !== modalCurrentId));
       })
       .catch((error) => console.log('error', error));
     setOpenModal(false);
   };
-
-  const showModal = (id) => {
-    setOpenModal(true);
-    setFavoriteCurrentId(id);
-  };
-
-  const filteredDataHandler = (data, value) =>
+  const getFilteredData = (data, value) =>
     data.filter(({ status }) => {
       return status.toUpperCase() === value.toUpperCase();
     });
-
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const getUserCards = async (token) => {
-    axios
-      .get(`${SERVER_URL}/my/cards`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(({ data }) => {
-        setData(data);
-        setUserCards(filteredDataHandler(data, sortBy));
-      })
-      .catch((error) => console.log('error', error));
-  };
-
-  const getMyFavorites = (token) => {
-    if (token === false) {
-      return;
+    if (token) {
+      axios
+        .get(`${SERVER_URL}/my/cards`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(({ data }) => {
+          setData(data);
+          setUserCards(getFilteredData(data, sortBy));
+        })
+        .catch((error) => console.log('error', error));
     }
-    axios
-      .get(`${SERVER_URL}/my/favorites`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(({ data }) => {
-        if (!data || !data.favorites) {
-          return;
-        }
-        setFavorites(data.favorites);
-      })
-      .catch((error) => console.log('error', error));
   };
-
+  const getMyFavorites = async (token) => {
+    if (token) {
+      axios
+        .get(`${SERVER_URL}/my/favorites`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then(({ data }) => {
+          console.log(data);
+          data.favorites.forEach((id) => {
+            axios.get(`${SERVER_URL}/cards/${id}`).then(({ data }) => {
+              setUserFav((prev) =>
+                !prev.some(({ _id }) => _id === data._id) ? [...prev, data] : [...prev]
+              );
+            });
+          });
+        })
+        .catch((error) => console.log('error', error));
+    }
+  };
   useEffect(() => {
     const getUserAccessToken = async () => {
       try {
@@ -100,222 +107,19 @@ function ProfilePage() {
     };
 
     getUserAccessToken().then((token) => {
-      getUserCards(token);
-      getMyFavorites(token);
+      getUserCards(token).then(() => getMyFavorites(token));
     });
     // eslint-disable-next-line
   }, [getIdTokenClaims]);
-  const deleteCardHandler = (id) => {
-    const res = window.confirm('Ви впевнені, що хочете видалити запис?');
-    if (res) {
-      axios
-        .delete(`${SERVER_URL}/cards/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(() => getUserCards(token))
-        .catch((error) => console.log('error', error));
-    }
-  };
-  const [userFav, setUserFav] = useState(filteredDataHandler(data, sortBy));
   const handleProfilePage = (e) => {
     const value = e.target.getAttribute('data-id');
     setRenderPage(value);
-    if (favorites === false) {
-      return;
-    }
-    if (value === 'user-fav') {
-      favorites.forEach((id) => {
-        axios
-          .get(`${SERVER_URL}/cards/${id}`)
-          .then(({ data }) => {
-            setUserFav((prev) => {
-              return [...prev, data];
-            });
-          })
-          .catch((e) => {
-            if (e.response.status === 404) {
-              axios.patch(`${SERVER_URL}/my/favorites`, JSON.stringify(id), {
-                headers: {
-                  'Content-Type': 'application/json',
-                  Authorization: `Bearer ${token}`,
-                },
-              });
-            }
-          });
-      });
-    } else {
-      setUserFav([]);
-    }
   };
   const handleFilterValue = (e) => {
     if (e.target.tagName === 'LI') {
       const value = e.target.getAttribute('data-id');
       setSortBy(value);
-      setUserCards(filteredDataHandler(data, value));
-    }
-  };
-  const renderUserCards = (cards) => {
-    return (
-      <>
-        <ul className={'option--list'} onClick={handleFilterValue}>
-          <li
-            className={'option--item text-success ' + (sortBy === 'active' ? 'active' : '')}
-            data-id="active">
-            Активні
-          </li>
-          <li
-            className={'option--item text-success ' + (sortBy === 'pending' ? 'active' : '')}
-            data-id="pending">
-            В обробці
-          </li>
-          <li
-            className={'option--item text-success ' + (sortBy === 'rejected' ? 'active' : '')}
-            data-id="rejected">
-            Скасовані
-          </li>
-        </ul>
-        {cards.length === 0 ? (
-          <div className="row py-lg-5">
-            <div className="col-lg-8 col-md-8 mx-auto">
-              {(() => {
-                switch (sortBy) {
-                  case 'active':
-                    return (
-                      <>
-                        <h1 className="fw-light">У вас немає активних оголошень</h1>
-                        <p className="lead text-muted">
-                          Можливо, ваше оголошення ще проходить перевірку. <br /> Завітайте у
-                          вкладку "В обробці", щоб це перевірити.
-                        </p>
-                      </>
-                    );
-                  case 'pending':
-                    return (
-                      <>
-                        <h1 className="fw-light">У вас немає оголошень в обробці</h1>
-                        <p className="lead text-muted">
-                          Створіть нове оголошення і воно з'явиться тут.
-                        </p>
-                      </>
-                    );
-                  case 'rejected':
-                    return (
-                      <>
-                        <h1 className="fw-light">У вас немає скасованих оголошень</h1>
-                        <p className="lead text-muted">
-                          Тут з'являться оголошення, які порушують правила платформи.
-                        </p>
-                      </>
-                    );
-                  default:
-                    return (
-                      <>
-                        <h1 className="fw-light">У вас немає активних оголошень</h1>
-                        <p className="lead text-muted">
-                          Можливо, ваше оголошення ще проходить перевірку. <br /> Завітайте у
-                          вкладку "В обробці", щоб це перевірити.
-                        </p>
-                      </>
-                    );
-                }
-              })()}
-              <p>
-                <Link to="/create" className="btn btn-outline-success my-2">
-                  Створити оголошення
-                </Link>
-              </p>
-            </div>
-          </div>
-        ) : (
-          <ul className="list-unstyled d-flex gap-3 flex-wrap pt-3 pb-3 justify-content-center justify-content-md-start">
-            {cards.map(({ _id, price, images, category, title, currency, type }) => {
-              return (
-                <li key={_id} className="profile-cards-item border border-rounded pb-2">
-                  <Link to={'/products/' + _id} className="text-decoration-none border-rounded">
-                    <ProductCard
-                      price={price}
-                      category={category}
-                      title={title}
-                      image={images.length > 0 && images[0].url ? images[0].url : emptyImg}
-                      currency={currency}
-                      type={type}
-                      favorite={false}
-                      userToken={false}
-                    />
-                  </Link>
-                  <Link
-                    className="btn btn-outline-success m-2 py-2 text-decoration-none"
-                    style={{ width: '120px' }}
-                    to={`/products/${_id}/edit`}>
-                    Редагувати
-                  </Link>
-                  <button
-                    className="btn btn-outline-danger m-2 py-2 text-decoration-none"
-                    style={{ width: '120px' }}
-                    onClick={() => deleteCardHandler(_id)}>
-                    Видалити
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        )}
-      </>
-    );
-  };
-  const renderUserFav = (fav) => {
-    if (fav.length === 0) {
-      return (
-        <div className="row py-lg-5">
-          <div className="col-lg-8 col-md-8 mx-auto">
-            <>
-              <h1 className="fw-light">У вас немає товарів доданих в обране</h1>
-              <p className="lead text-muted">
-                Тут буде відображено товари, які ви додали в обране.
-              </p>
-            </>
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <>
-          <ModalComponent
-            title="Ви справді хочете прибрати з обраних?"
-            handleOk={handleModalOk}
-            open={openModal}
-            handleCancel={handleModalCancel}
-          />
-          <ul className="list-unstyled d-flex gap-3 flex-wrap pt-3 pb-3">
-            {fav.map(({ _id, price, images, category, title, currency, type }) => {
-              return (
-                <li key={_id} className="profile-cards-item border border-rounded pb-2">
-                  <Link to={'/products/' + _id} className="text-decoration-none border-rounded">
-                    <ProductCard
-                      price={price}
-                      category={category}
-                      title={title}
-                      image={images.length > 0 && images[0].url ? images[0].url : emptyImg}
-                      currency={currency}
-                      type={type}
-                      favorite={false}
-                      userToken={false}
-                    />
-                  </Link>
-                  <button
-                    className="btn btn-outline-primary m-2 py-2 text-decoration-none"
-                    style={{ width: '200px' }}
-                    onClick={() => showModal(_id)}>
-                    Прибрати з обраних
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </>
-      );
+      setUserCards(getFilteredData(data, value));
     }
   };
 
@@ -353,7 +157,17 @@ function ProfilePage() {
               </li>
             </ul>
             <section className="py-3 text-center container">
-              {renderPage === 'user-cards' ? renderUserCards(userCards) : renderUserFav(userFav)}
+              {renderPage === 'user-cards'
+                ? renderUserCards(
+                    userCards,
+                    sortBy,
+                    handleFilterValue,
+                    showModal,
+                    openModal,
+                    handleRemoveCards,
+                    handleModalCancel
+                  )
+                : renderUserFav(userFav, showModal, openModal, handleRemoveFav, handleModalCancel)}
             </section>
           </div>
         </section>
