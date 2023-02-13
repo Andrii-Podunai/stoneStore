@@ -87,7 +87,7 @@ export default function renderUserCards(
         <ul className="list-unstyled d-flex gap-3 flex-wrap pt-3 pb-3 justify-content-center justify-content-md-start">
           {cards.map(({ _id, price, images, category, title, currency, type }) => {
             return (
-              <li key={_id} className="border border-rounded pb-2">
+              <li key={_id} className="profile-cards-item border border-rounded pb-2">
                 <Link to={'/products/' + _id} className="text-decoration-none border-rounded">
                   <ProductCard
                     price={price}
