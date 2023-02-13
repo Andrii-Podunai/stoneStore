@@ -32,7 +32,7 @@ export default function renderUserCards(
         </li>
       </ul>
       {cards.length === 0 ? (
-        <div className="row py-lg-5">
+        <div className="row py-3 py-lg-5">
           <div className="col-lg-8 col-md-8 mx-auto">
             {(() => {
               switch (sortBy) {
