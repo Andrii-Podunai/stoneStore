@@ -1,4 +1,3 @@
-import './App.scss';
 import Header from './components/Header';
 import Home from './pages/Home';
 import Footer from './components/Footer';
@@ -15,6 +14,7 @@ import Admin from 'pages/Admin/Admin';
 import AboutUs from 'pages/AboutUs';
 import Contacts from 'pages/Contacts';
 import PrivacyPolicy from 'pages/PrivacyPolicy';
+import ScrollWrapper from './components/ScrollWrapper';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -22,7 +22,7 @@ function App() {
     return <div>Loading...</div>;
   }
   return (
-    <div className="App">
+    <ScrollWrapper>
       <Header />
       <main>
         <Routes>
@@ -54,7 +54,7 @@ function App() {
         </Routes>
       </main>
       <Footer />
-    </div>
+    </ScrollWrapper>
   );
 }
 
