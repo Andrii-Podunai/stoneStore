@@ -16,6 +16,7 @@ function ProductForm({ initialValues, submit }) {
       return {
         response: [el],
         url: el.url,
+        status: 'done',
       };
     })
   );
@@ -29,10 +30,8 @@ function ProductForm({ initialValues, submit }) {
         if (typeof value.phoneNumber === 'string') {
           value.phoneNumber = convertNumber(value.phoneNumber);
         }
-        if (fileList && fileList.length > 0) {
-          const images = fileList.filter(({ status }) => status === 'done');
-          value.images = images.map((value) => value.response[0]);
-        }
+        const images = fileList.filter(({ status }) => status === 'done');
+        value.images = images.map((value) => value.response[0]);
         submit(value);
       }}>
       {({ handleSubmit, touched, errors, getFieldProps, values, setFieldValue }) => (
