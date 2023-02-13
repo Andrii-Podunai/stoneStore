@@ -19,9 +19,12 @@ function Header() {
               <Link to="/create" className="create-btn btn btn-warning me-4">
                 Створити оголошення
               </Link>
-              <Link to="/admin" className="create-btn btn btn-warning me-4">
-                Адмін панель
-              </Link>
+              {user.sub === process.env.REACT_APP_ADMIN && (
+                <Link to="/admin" className="create-btn btn btn-warning me-4">
+                  Адмін панель
+                </Link>
+              )}
+
               <Link to="/profile" className="linkLog me-1">
                 <img
                   src={user.picture}

@@ -42,8 +42,20 @@ function updateCardHandler(request, reply) {
 }
 
 function updateCardStatus(request, reply) {
+  if (request.user.sub !== process.env.ADMIN) {
+    reply.code(500).send('Access denied');
+  }
   const { id } = request.params;
   CardRepositories.updateStatusCard(id, request.body.value).then(() => reply.code(200).send());
+}
+
+function getCardsPending(request, reply) {
+  if (request.user.sub !== process.env.ADMIN) {
+    reply.code(500).send('Access denied');
+  }
+  CardRepositories.findPending()
+    .then((data) => reply.code(200).send(data))
+    .catch((error) => reply.code(error.status || 500).send(error));
 }
 
 function deleteCardHandler(request, reply) {
@@ -51,7 +63,9 @@ function deleteCardHandler(request, reply) {
 
   CardRepositories.deleteById(id, request.user.sub)
     .then((data) => {
-      deleteFromS3(data);
+      if (data.length > 0) {
+        deleteFromS3(data);
+      }
       reply.code(200).send(data);
     })
     .catch((error) => reply.code(error.status || 500).send(error));
@@ -63,6 +77,13 @@ export default (fastify, __, done) => {
     url: '/',
     schema: Schemas.getCards,
     handler: getCardsHandler,
+  });
+  fastify.route({
+    method: 'GET',
+    url: '/admin',
+    preValidation: fastify.authenticate,
+    schema: Schemas.getCards,
+    handler: getCardsPending,
   });
   fastify.route({
     method: 'GET',
@@ -93,6 +114,7 @@ export default (fastify, __, done) => {
   fastify.route({
     method: 'PUT',
     url: '/:id/status',
+    preValidation: fastify.authenticate,
     schema: Schemas.updateStatus,
     handler: updateCardStatus,
   });

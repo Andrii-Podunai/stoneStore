@@ -83,7 +83,6 @@ function ProfilePage() {
           },
         })
         .then(({ data }) => {
-          console.log(data);
           data.favorites.forEach((id) => {
             axios.get(`${SERVER_URL}/cards/${id}`).then(({ data }) => {
               setUserFav((prev) =>

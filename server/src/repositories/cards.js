@@ -14,8 +14,10 @@ function create(data, sub) {
 
 function getMany({ page, amount = 50 }, query) {
   if (page) {
+    const queryObj = queryToDocument(query);
+    queryObj.status = 'Active';
     return apps
-      .find(queryToDocument(query))
+      .find(queryObj)
       .limit(+amount)
       .skip((page - 1) * +amount)
       .sort({ _id: -1 })
@@ -26,7 +28,9 @@ function getMany({ page, amount = 50 }, query) {
 }
 
 function getCount(query) {
-  return apps.count({ ...queryToDocument(query) }); //when admin will be ready: "status: 'Active'"
+  const queryObj = queryToDocument(query);
+  queryObj.status = 'Active';
+  return apps.count(queryObj);
 }
 
 async function getOne(id) {
@@ -60,6 +64,11 @@ async function updateStatusCard(id, status) {
   const res = await apps.updateOne({ _id: ObjectId(id) }, { $set: { status: status } });
   return res.acknowledged;
 }
+
+function findPending() {
+  return apps.find({ status: 'Pending' }).toArray();
+}
+
 async function deleteById(id, sub) {
   const myCard = await apps.findOne({ _id: ObjectId(id) });
 
@@ -113,4 +122,5 @@ export default {
   create,
   getMany,
   getOne,
+  findPending,
 };
