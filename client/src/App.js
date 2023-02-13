@@ -15,6 +15,7 @@ import AboutUs from 'pages/AboutUs';
 import Contacts from 'pages/Contacts';
 import PrivacyPolicy from 'pages/PrivacyPolicy';
 import ScrollWrapper from './components/ScrollWrapper';
+import ProtectedRouteAdmin from './pages/Admin/ProtectedRouteAdmin';
 
 function App() {
   const { isLoading } = useAuth0();
@@ -47,7 +48,14 @@ function App() {
           />
           <Route path="/products/:id/edit" element={<EditProductPage />} />
           <Route path="/successfully" element={<SuccessForm />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRouteAdmin>
+                <Admin />
+              </ProtectedRouteAdmin>
+            }
+          />
           <Route path="/about" element={<AboutUs />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />

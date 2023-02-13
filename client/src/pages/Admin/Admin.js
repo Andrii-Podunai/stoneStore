@@ -1,37 +1,69 @@
 import { useState, useEffect } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import './style.scss';
+import { SERVER_URL } from 'variables';
+import { Link } from 'react-router-dom';
 
 function Admin() {
   const dayjs = require('dayjs');
+  const { getIdTokenClaims } = useAuth0();
   const [products, setProducts] = useState([]);
+  const [token, setToken] = useState(false);
 
   useEffect(() => {
-    setInterval(function repeatSend() {
-      const fetchData = async () => {
-        const result = await axios('http://localhost:8085/cards?page=1');
-        setProducts(result.data);
-      };
+    getIdTokenClaims()
+      .then((response) => setToken(response.__raw))
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }, [getIdTokenClaims]);
+
+  useEffect(() => {
+    if (!token) {
+      return;
+    }
+    const fetchData = async () => {
+      const result = await axios(`${SERVER_URL}/cards/admin`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setProducts(result.data);
+    };
+    fetchData();
+    setInterval(() => {
       fetchData();
-    }, 4000);
-  }, []);
+    }, 20000);
+  }, [token]);
 
-  let approveToPublish = async (value) => {
+  const handleStatus = async (data, status) => {
     await axios
-      .put(`http://localhost:8085/cards/${value._id}/status`, { value: 'Active' })
+      .put(
+        `${SERVER_URL}/cards/${data._id}/status`,
+        { value: status },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+      .then(() => {
+        deleteLocal(data._id);
+      })
       .catch((error) => console.log(error));
   };
 
-  let declineToPublish = async (value) => {
-    await axios
-      .put(`http://localhost:8085/cards/${value._id}/status`, { value: 'Rejected' })
-      .catch((error) => console.log(error));
+  const deleteLocal = (id) => {
+    setProducts((prevState) => prevState.filter(({ _id }) => _id !== id));
   };
+
   return (
     <div className="Admin">
       <table className="border-0.1rem-solid-#0000">
         <thead>
           <tr>
+            <th>Preview</th>
             <th>Title</th>
             <th>Phone Number</th>
             <th>Status</th>
@@ -44,6 +76,9 @@ function Admin() {
             .filter((data) => data.status === 'Pending')
             .map((data) => (
               <tr key={data._id}>
+                <td>
+                  <Link to={'/products/' + data._id}>Show more</Link>
+                </td>
                 <td className="Admin-text">{data.title}</td>
                 <td>{data.phoneNumber}</td>
                 <td>{data.status}</td>
@@ -51,13 +86,13 @@ function Admin() {
                 <td>
                   <form>
                     <button
-                      onClick={() => approveToPublish(data)}
+                      onClick={() => handleStatus(data, 'Active')}
                       type="button"
                       className="Admin-text-btn btn btn-outline-success">
                       Approve
                     </button>
                     <button
-                      onClick={() => declineToPublish(data)}
+                      onClick={() => handleStatus(data, 'Rejected')}
                       type="button"
                       className="btn btn-outline-success">
                       Decline
