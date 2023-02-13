@@ -29,6 +29,10 @@ function ProductForm({ initialValues, submit }) {
         if (typeof value.phoneNumber === 'string') {
           value.phoneNumber = convertNumber(value.phoneNumber);
         }
+        if (fileList && fileList.length > 0) {
+          const images = fileList.filter(({ status }) => status === 'done');
+          value.images = images.map((value) => value.response[0]);
+        }
         submit(value);
       }}>
       {({ handleSubmit, touched, errors, getFieldProps, values, setFieldValue }) => (
@@ -77,15 +81,9 @@ function ProductForm({ initialValues, submit }) {
                     axios.delete(`${SERVER_URL}/upload`, {
                       data: [info.file.response[0].key],
                     });
-                    const filterArrays = values.images.filter(
-                      ({ key }) => key !== info.file.response[0].key
-                    );
-                    setFieldValue('images', filterArrays);
                   }
                 }
-                if (info.file.status === 'done') {
-                  setFieldValue('images', [...values.images, ...info.file.response]);
-                } else if (info.file.status === 'error') {
+                if (info.file.status === 'error') {
                   message.error(`${info.file.key} file upload failed.`);
                 }
                 setFileList((prevFileList) => {
