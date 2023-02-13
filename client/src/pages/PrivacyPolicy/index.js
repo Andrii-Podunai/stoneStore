@@ -60,7 +60,7 @@ function Privacy() {
       </p>
       <p>
         <strong>Веб-сайт</strong> відноситься до Vtormall, доступний з{' '}
-        <a href="https://vtormall.com/" rel="external nofollow noopener" target="_blank">
+        <a href="https://vtormall.com/" rel="external nofollow noopener noreferrer" target="_blank">
           https://vtormall.com/
         </a>
       </p>
@@ -123,6 +123,7 @@ function Privacy() {
         переходите в режим офлайн, поки файли cookie сеансу видаляються, як тільки ви закриваєте
         свій веб-браузер. Дізнайтеся більше про файли cookie на{' '}
         <a
+          rel="noreferrer"
           href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/#Use_Of_Cookies_And_Tracking"
           target="_blank">
           Безкоштовний веб-сайт політики конфіденційностіБезкоштовний веб-сайт політики
@@ -334,7 +335,7 @@ function Privacy() {
         конфіденційності Google:{' '}
         <a
           href="https://www.google.com/intl/en/policies/privacy/"
-          rel="external nofollow noopener"
+          rel="external nofollow noopener noreferrer"
           target="_blank">
           https://www.google.com/intl/en/policies/privacy/
         </a>

@@ -67,7 +67,7 @@ function ProductsFilter({ categoryValue, typeValue, onSearch }) {
 
   return (
     <div className="container">
-      <div className="filter-bg row p-2 shadow-sm rounded" style={{ backgroundColor: '#F9F9F9' }}>
+      <div className="filter-bg row py-2 shadow-sm rounded" style={{ backgroundColor: '#F9F9F9' }}>
         <div className="col-xxl-4 col-xl-3 col-lg-12 row mb-2 mb-xl-0">
           <div className="col-lg-12 col-xl-12 mt-3 mt-lg-0 d-flex align-items-center">
             <Input onChange={handleChangeSearch} value={searchValue} placeholder="Я шукаю..." />
