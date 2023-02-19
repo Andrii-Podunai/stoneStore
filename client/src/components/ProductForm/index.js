@@ -21,19 +21,60 @@ function ProductForm({ initialValues, submit }) {
     })
   );
 
+  function onChangeUpload(info) {
+    if (info.file.status === 'removed') {
+      if (info.file.response[0]) {
+        axios.delete(`${SERVER_URL}/upload`, {
+          data: [info.file.response[0].key],
+        });
+      }
+    }
+    if (info.file.status === 'error') {
+      message.error(`${info.file.key} file upload failed.`);
+    }
+    setFileList((prevFileList) => {
+      return info.fileList.map((file) => {
+        const mistake = prevFileList.find(
+          (prevFile) =>
+            prevFile.uid === file.uid && prevFile.status === 'done' && file.status === 'uploading'
+        );
+        if (mistake) {
+          return { ...file, status: 'done', response: mistake.response };
+        }
+        return file;
+      });
+    });
+  }
+
+  async function onPreviewUpload(file) {
+    let src = file.url;
+    if (!src) {
+      src = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file.originFileObj);
+        reader.onload = () => resolve(reader.result);
+      });
+    }
+    const image = new Image();
+    image.src = src;
+    const imgWindow = window.open(src);
+    imgWindow?.document.write(image.outerHTML);
+  }
+
+  function onSubmitForm(value) {
+    if (typeof value.phoneNumber === 'string') {
+      value.phoneNumber = convertNumber(value.phoneNumber);
+    }
+    const images = fileList.filter(({ status }) => status === 'done');
+    value.images = images.map((value) => value.response[0]);
+    submit(value);
+  }
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={schema}
-      validateOnChange={false}
-      onSubmit={(value) => {
-        if (typeof value.phoneNumber === 'string') {
-          value.phoneNumber = convertNumber(value.phoneNumber);
-        }
-        const images = fileList.filter(({ status }) => status === 'done');
-        value.images = images.map((value) => value.response[0]);
-        submit(value);
-      }}>
+      onSubmit={(value) => onSubmitForm(value)}>
       {({ handleSubmit, touched, errors, getFieldProps, values, setFieldValue }) => (
         <Form
           className="ps-2 pe-2"
@@ -74,46 +115,8 @@ function ProductForm({ initialValues, submit }) {
               accept="image/*"
               listType="picture-card"
               multiple
-              onChange={(info) => {
-                if (info.file.status === 'removed') {
-                  if (info.file.response[0]) {
-                    axios.delete(`${SERVER_URL}/upload`, {
-                      data: [info.file.response[0].key],
-                    });
-                  }
-                }
-                if (info.file.status === 'error') {
-                  message.error(`${info.file.key} file upload failed.`);
-                }
-                setFileList((prevFileList) => {
-                  return info.fileList.map((file) => {
-                    const mistake = prevFileList.find(
-                      (prevFile) =>
-                        prevFile.uid === file.uid &&
-                        prevFile.status === 'done' &&
-                        file.status === 'uploading'
-                    );
-                    if (mistake) {
-                      return { ...file, status: 'done', response: mistake.response };
-                    }
-                    return file;
-                  });
-                });
-              }}
-              onPreview={async (file) => {
-                let src = file.url;
-                if (!src) {
-                  src = await new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(file.originFileObj);
-                    reader.onload = () => resolve(reader.result);
-                  });
-                }
-                const image = new Image();
-                image.src = src;
-                const imgWindow = window.open(src);
-                imgWindow?.document.write(image.outerHTML);
-              }}>
+              onChange={(info) => onChangeUpload(info)}
+              onPreview={(file) => onPreviewUpload(file)}>
               {values.images.length < 12 && 'Завантажити'}
             </Upload>
           </Form.Item>

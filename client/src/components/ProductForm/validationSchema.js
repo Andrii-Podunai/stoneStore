@@ -18,6 +18,7 @@ yup.addMethod(yup.string, 'customMinNumber', function (...props) {
 const schema = yup.object().shape({
   name: yup
     .string()
+    .matches(/^[aA-zZ]+$/, 'Правильне ім`я?')
     .min(3, 'Правильне ім`я?')
     .required('Ім`я відіграє важливу роль, не забудьте додати його'),
   title: yup
