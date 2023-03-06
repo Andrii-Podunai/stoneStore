@@ -3,14 +3,15 @@ import { Form, Input, Button, Select, Upload, message } from 'antd';
 import { Formik } from 'formik';
 import schema from './validationSchema';
 import { PatternFormat } from 'react-number-format';
-import axios from 'axios';
 import { SERVER_URL } from 'variables';
 import convertNumber from './numberConverter';
+import { useDeleteImage } from 'rest';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
 function ProductForm({ initialValues, submit }) {
+  const { reRenderDelImage } = useDeleteImage();
   const [fileList, setFileList] = useState(
     initialValues.images.map((el) => {
       return {
@@ -24,9 +25,7 @@ function ProductForm({ initialValues, submit }) {
   function onChangeUpload(info) {
     if (info.file.status === 'removed') {
       if (info.file.response[0]) {
-        axios.delete(`${SERVER_URL}/upload`, {
-          data: [info.file.response[0].key],
-        });
+        reRenderDelImage([info.file.response[0].key]);
       }
     }
     if (info.file.status === 'error') {

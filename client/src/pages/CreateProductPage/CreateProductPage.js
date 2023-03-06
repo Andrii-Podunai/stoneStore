@@ -1,9 +1,6 @@
-import { useEffect, useState } from 'react';
 import ProductForm from '../../components/ProductForm';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth0 } from '@auth0/auth0-react';
-import { SERVER_URL } from 'variables';
+import { usePostForm, useUserToken } from 'rest';
 
 const initialValues = {
   name: '',
@@ -21,35 +18,15 @@ const initialValues = {
 
 function CreateProductPage() {
   const navigate = useNavigate();
-  const { getIdTokenClaims } = useAuth0();
-  const [token, setToken] = useState();
-  useEffect(() => {
-    const getUserAccessToken = async () => {
-      try {
-        const accessToken = await getIdTokenClaims();
-        setToken(accessToken.__raw);
-      } catch (e) {
-        console.log(e.message);
-      }
-    };
-
-    getUserAccessToken();
-  }, [getIdTokenClaims]);
+  const [token] = useUserToken();
+  const { reRenderPostForm, errorPostForm } = usePostForm();
 
   function submit(value) {
-    axios
-      .post(`${SERVER_URL}/cards`, JSON.stringify({ ...value }), {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(function () {
+    reRenderPostForm(token, JSON.stringify(value)).then(() => {
+      if (!errorPostForm) {
         navigate('/successfully');
-      })
-      .catch(function (error) {
-        console.error(error.message);
-      });
+      }
+    });
   }
 
   return <ProductForm initialValues={initialValues} submit={submit} />;

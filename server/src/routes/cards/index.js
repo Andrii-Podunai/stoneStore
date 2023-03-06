@@ -46,7 +46,7 @@ function updateCardStatus(request, reply) {
     reply.code(500).send('Access denied');
   }
   const { id } = request.params;
-  CardRepositories.updateStatusCard(id, request.body.value).then(() => reply.code(200).send());
+  CardRepositories.updateStatusCard(id, request.body.status).then(() => reply.code(200).send());
 }
 
 function getCardsPending(request, reply) {

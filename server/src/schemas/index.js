@@ -114,7 +114,7 @@ const updateStatus = {
   },
   body: {
     type: 'object',
-    required: ['value'],
+    required: ['status'],
     properties: {
       value: Card.properties.status,
     },
