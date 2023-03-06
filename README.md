@@ -100,7 +100,6 @@ fetch('http://localhost:8085/cards', requestOptions)
 If you send images, always use array "[]" even if you want to send only 1 image also use array.
 In name to image use name witch you will receive from request by number 3.
 
-
 5.pull card example:
 const requestOptions = {
 method: 'PUT',
@@ -141,4 +140,14 @@ fetch('http://localhost:8085/cards/count')
 fetch('http://localhost:8085/upload', {
 method: 'DELETE',
 body: ["key.webp"]
+})
+
+10.My information. You can use methods: POST, PATCH and GET.
+fetch("http://localhost:8085/my/information", {
+method: 'POST',
+body:{
+"name":"Olexandre",
+"surname": "Famile",
+"phoneNumber": "38098643613"
+}
 })
