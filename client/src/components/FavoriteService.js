@@ -1,14 +1,14 @@
 import Star from './Star';
-import axios from 'axios';
-import { SERVER_URL } from '../variables';
 import { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import ModalComponent from './Modal';
+import { useFavorite } from 'rest';
 
 function FavoriteService({ fill, token, id }) {
   const [openModal, setOpenModal] = useState(false);
   const { loginWithRedirect } = useAuth0();
   const [currentFill, setCurrentFill] = useState(fill);
+  const { reFetchFavorite } = useFavorite();
 
   useEffect(() => {
     setCurrentFill(fill);
@@ -21,17 +21,9 @@ function FavoriteService({ fill, token, id }) {
 
   const handleOk = (e) => {
     e.preventDefault();
-    axios
-      .patch(`${SERVER_URL}/my/favorites`, JSON.stringify(id), {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(() => {
-        setCurrentFill(false);
-      })
-      .catch((error) => console.log('error', error));
+    reFetchFavorite('PATCH', token, id).then(() => {
+      setCurrentFill(false);
+    });
     setOpenModal(false);
   };
 
@@ -42,17 +34,9 @@ function FavoriteService({ fill, token, id }) {
       return;
     }
     if (currentFill === false) {
-      axios
-        .post(`${SERVER_URL}/my/favorites`, JSON.stringify(id), {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(() => {
-          setCurrentFill(true);
-        })
-        .catch((error) => console.log('error', error));
+      reFetchFavorite('POST', token, id).then(() => {
+        setCurrentFill(true);
+      });
     } else {
       setOpenModal(true);
     }

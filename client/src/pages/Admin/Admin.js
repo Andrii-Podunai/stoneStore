@@ -1,61 +1,29 @@
-import { useState, useEffect } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
-import axios from 'axios';
+import { useEffect } from 'react';
 import './style.scss';
-import { SERVER_URL } from 'variables';
 import { Link } from 'react-router-dom';
+import { usePendingCards, usePutPendingCards, useUserToken } from 'rest';
 
 function Admin() {
   const dayjs = require('dayjs');
-  const { getIdTokenClaims } = useAuth0();
-  const [products, setProducts] = useState([]);
-  const [token, setToken] = useState(false);
+  const [token] = useUserToken();
+  const { pendingCards, reFetchPendingCards } = usePendingCards(token);
+  const { reFetchPutPendingCards } = usePutPendingCards();
 
   useEffect(() => {
-    getIdTokenClaims()
-      .then((response) => setToken(response.__raw))
-      .catch((err) => {
-        console.log(err.message);
-      });
-  }, [getIdTokenClaims]);
-
-  useEffect(() => {
-    if (!token) {
-      return;
+    if (token) {
+      setInterval(() => {
+        reFetchPendingCards(token);
+      }, 10000);
     }
-    const fetchData = async () => {
-      const result = await axios(`${SERVER_URL}/cards/admin`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setProducts(result.data);
-    };
-    fetchData();
-    setInterval(() => {
-      fetchData();
-    }, 20000);
-  }, [token]);
+    // eslint-disable-next-line
+  }, []);
 
-  const handleStatus = async (data, status) => {
-    await axios
-      .put(
-        `${SERVER_URL}/cards/${data._id}/status`,
-        { value: status },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
-      .then(() => {
-        deleteLocal(data._id);
-      })
-      .catch((error) => console.log(error));
-  };
-
-  const deleteLocal = (id) => {
-    setProducts((prevState) => prevState.filter(({ _id }) => _id !== id));
+  const handleStatus = (data, status) => {
+    reFetchPutPendingCards(token, data._id, status).then((bool) => {
+      if (bool === true) {
+        reFetchPendingCards(token);
+      }
+    });
   };
 
   return (
@@ -72,7 +40,7 @@ function Admin() {
           </tr>
         </thead>
         <tbody>
-          {products
+          {pendingCards
             .filter((data) => data.status === 'Pending')
             .map((data) => (
               <tr key={data._id}>

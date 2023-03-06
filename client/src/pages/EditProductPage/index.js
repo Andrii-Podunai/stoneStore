@@ -1,79 +1,43 @@
 import ProductForm from 'components/ProductForm';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
-import { useParams } from 'react-router-dom';
-import { SERVER_URL } from 'variables';
+import { useCard, usePutForm, useUserToken } from 'rest';
 
 function EditProductPage() {
   const [initialValues, setInitialValues] = useState({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { getIdTokenClaims } = useAuth0();
-  const [token, setToken] = useState();
-  const { id } = useParams();
-
-  async function getData() {
-    const { data } = await axios.get(`${SERVER_URL}/cards/${id}`);
-    const {
-      name,
-      title,
-      description,
-      price,
-      count,
-      category,
-      phoneNumber,
-      location,
-      currency,
-      type,
-      images,
-    } = data;
-    setLoading(false);
-    setInitialValues({
-      name,
-      title,
-      description,
-      price,
-      count,
-      category,
-      phoneNumber,
-      location,
-      currency,
-      type,
-      images,
-    });
-  }
-
-  const getUserAccessToken = async () => {
-    try {
-      const accessToken = await getIdTokenClaims();
-      setToken(accessToken.__raw);
-    } catch (e) {
-      console.log(e.message);
-    }
-  };
+  const [token] = useUserToken();
+  const { card } = useCard();
+  const { reRenderPutForm, errorPutForm } = usePutForm();
 
   useEffect(() => {
-    getData();
-    getUserAccessToken();
-    // eslint-disable-next-line
-  }, []);
+    if (card === false) {
+      return;
+    }
+    const dataValues = {
+      name: card.name,
+      title: card.title,
+      description: card.description,
+      price: card.price,
+      count: card.count,
+      category: card.category,
+      phoneNumber: card.phoneNumber,
+      location: card.location,
+      currency: card.currency,
+      type: card.type,
+      images: card.images,
+    };
+    setInitialValues(dataValues);
+    setLoading(false);
+  }, [card]);
 
   function submit(value) {
-    axios
-      .put(`${SERVER_URL}/cards/${id}`, JSON.stringify(value), {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(function () {
+    reRenderPutForm(token, JSON.stringify(value)).then(() => {
+      if (!errorPutForm) {
         navigate('/successfully');
-      })
-      .catch(function (error) {
-        console.error(error.message);
-      });
+      }
+    });
   }
 
   if (loading) {
