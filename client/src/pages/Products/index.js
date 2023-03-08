@@ -2,12 +2,11 @@
 
 import * as React from 'react';
 import { Pagination } from 'antd';
-import ProductCard from 'components/ProductCard';
-import emptyImg from 'images/emptyImage.png';
-import { Link, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import ProductsFilter from './ProductsFilter';
 import Loader from '../../components/Loader';
 import { useUserToken, useFavorites, useCards, useCardsCount } from 'rest/index.js';
+import { dataMapper } from './ProductsServices';
 
 function Products(): React.Node {
   const [token] = useUserToken();
@@ -20,11 +19,13 @@ function Products(): React.Node {
   const [pageSize, setPageSize] = React.useState<number>(24);
   const { cardsCount, reFetchCardsCount } = useCardsCount(categoryValue, typeValue, searchValue);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   React.useMemo(() => {
     const category = searchParams.get('category');
     const type = searchParams.get('type');
+    const currentPage = searchParams.get('page');
+    const pageSize = searchParams.get('pageSize');
     if (category !== null) {
       setCategoryValue(category);
     }
@@ -34,11 +35,16 @@ function Products(): React.Node {
     if (type !== null) {
       setTypeValue(type);
     }
+    if (currentPage !== null) {
+      setCurrentPage(+currentPage);
+    }
+    if (currentPage === null) {
+      setCurrentPage(1);
+    }
+    if (pageSize !== null) {
+      setPageSize(+pageSize);
+    }
   }, [searchParams]);
-
-  React.useEffect(() => {
-    setCurrentPage(1);
-  }, [categoryValue, typeValue, searchValue]);
 
   React.useEffect(() => {
     reFetchCardsCount(categoryValue, typeValue, searchValue);
@@ -47,12 +53,9 @@ function Products(): React.Node {
     // eslint-disable-next-line
   }, [currentPage, pageSize, categoryValue, typeValue, searchValue]);
 
-  const onChangePage = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const onShowSizeChange = (current: number, pageSize: number) => {
-    setPageSize(pageSize);
+  const onChangePagination = (page: number, pageSize: number) => {
+    setSearchParams({ page: page, pageSize: pageSize, type: typeValue, category: categoryValue });
+    document.documentElement.scrollTo(0, 0);
   };
 
   const handleSearch = (value) => {
@@ -70,39 +73,14 @@ function Products(): React.Node {
           />
         </div>
         <div className="row mx-auto gap-3 py-3">
-          {!errorCards &&
-            cards.map(({ _id, price, images, category, title, currency, type }) => {
-              const image = images.length > 0 && images[0].url ? images[0].url : emptyImg;
-              let favorite = false;
-              if (favorites !== false) {
-                favorite = favorites.includes(_id);
-              }
-              return (
-                <div key={_id} className="col p-0 d-flex justify-content-center">
-                  <Link to={_id} className="w-100 text-decoration-none">
-                    <ProductCard
-                      id={_id}
-                      price={price}
-                      category={category}
-                      title={title}
-                      image={image}
-                      currency={currency}
-                      type={type}
-                      favorite={favorite}
-                      userToken={token}
-                    />
-                  </Link>
-                </div>
-              );
-            })}
+          {!errorCards && dataMapper(cards, favorites, token)}
         </div>
         <Pagination
           current={currentPage}
-          onChange={onChangePage}
+          onChange={onChangePagination}
           total={cardsCount}
           defaultPageSize={pageSize}
           showSizeChanger
-          onShowSizeChange={onShowSizeChange}
           pageSizeOptions={[12, 24, 48, 96]}
         />
       </div>
@@ -123,11 +101,10 @@ function Products(): React.Node {
       </div>
       <Pagination
         current={currentPage}
-        onChange={onChangePage}
+        onChange={onChangePagination}
         total={cardsCount}
         defaultPageSize={pageSize}
         showSizeChanger
-        onShowSizeChange={onShowSizeChange}
         pageSizeOptions={[12, 24, 48, 96]}
       />
     </div>
