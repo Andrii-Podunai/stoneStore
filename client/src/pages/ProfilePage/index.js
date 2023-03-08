@@ -1,18 +1,28 @@
 import './style.scss';
-import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { SERVER_URL } from 'variables';
-import renderUserCards from './cardsPage';
-import renderUserFav from './favoritePage';
+import { EditOutlined } from '@ant-design/icons';
+import renderUserCards from './subpages/cardsPage';
+import renderUserFav from './subpages/favoritePage';
+import { Link } from 'react-router-dom';
+import { useDeleteCard, useFavorite, useFavorites, useUserCards, useUserToken } from '../../rest';
+import { generalRequestsVoid } from '../../rest/requestsServices';
+import useUserInformation from '../../rest/useUserInformation';
+
 function ProfilePage() {
-  const { user } = useAuth0();
-  const { getIdTokenClaims } = useAuth0();
-  const { name: userName, picture: profilePhoto, given_name: fullName } = user;
-  const [token, setToken] = useState([]);
-  const [data, setData] = useState([]);
-  const [userCards, setUserCards] = useState([]);
-  const [userFav, setUserFav] = useState([]);
+  const [token] = useUserToken();
+
+  const { userInfo } = useUserInformation();
+  const { given_name: name, picture: profilePhoto, family_name: surname } = userInfo;
+  const fullName = name + ' ' + surname;
+
+  const { userCards, reFetchCards } = useUserCards(token);
+  const { reRenderDelCard } = useDeleteCard();
+  const [filteredUserCards, setFilteredUserCards] = useState([]);
+
+  const { favorites } = useFavorites(token);
+  const { reFetchFavorite } = useFavorite();
+  const [userFavorites, setUserFavorites] = useState([]);
+
   const [sortBy, setSortBy] = useState('active');
   const [renderPage, setRenderPage] = useState('user-cards');
   const [openModal, setOpenModal] = useState(false);
@@ -28,88 +38,41 @@ function ProfilePage() {
   };
   const handleRemoveCards = (e) => {
     e.preventDefault();
-    axios
-      .delete(`${SERVER_URL}/cards/${modalCurrentId}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(() => getUserCards(token))
+    reRenderDelCard(token, modalCurrentId)
+      .then(() => reFetchCards(token))
       .catch((error) => console.log('error', error));
     setOpenModal(false);
   };
+
   const handleRemoveFav = (e) => {
     e.preventDefault();
-    axios
-      .patch(`${SERVER_URL}/my/favorites`, JSON.stringify(modalCurrentId), {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    reFetchFavorite('PATCH', token, modalCurrentId)
       .then(() => {
-        setUserFav((prevState) => prevState.filter(({ _id }) => _id !== modalCurrentId));
+        setUserFavorites((prevState) => prevState.filter(({ _id }) => _id !== modalCurrentId));
       })
       .catch((error) => console.log('error', error));
     setOpenModal(false);
   };
-  const getFilteredData = (data, value) =>
-    data.filter(({ status }) => {
+  const getFilteredData = (data, value) => {
+    return data.filter(({ status }) => {
       return status.toUpperCase() === value.toUpperCase();
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getUserCards = async (token) => {
-    if (token) {
-      axios
-        .get(`${SERVER_URL}/my/cards`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(({ data }) => {
-          setData(data);
-          setUserCards(getFilteredData(data, sortBy));
-        })
-        .catch((error) => console.log('error', error));
-    }
   };
-  const getMyFavorites = async (token) => {
-    if (token) {
-      axios
-        .get(`${SERVER_URL}/my/favorites`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(({ data }) => {
-          data.favorites.forEach((id) => {
-            axios.get(`${SERVER_URL}/cards/${id}`).then(({ data }) => {
-              setUserFav((prev) =>
-                !prev.some(({ _id }) => _id === data._id) ? [...prev, data] : [...prev]
-              );
-            });
-          });
-        })
-        .catch((error) => console.log('error', error));
-    }
-  };
-  useEffect(() => {
-    const getUserAccessToken = async () => {
-      try {
-        const accessToken = await getIdTokenClaims();
-        setToken(accessToken.__raw);
-        return accessToken.__raw;
-      } catch (e) {
-        console.log(e.message);
-      }
-    };
-
-    getUserAccessToken().then((token) => {
-      getUserCards(token).then(() => getMyFavorites(token));
+  const getUserFavorites = async () => {
+    favorites.map(async (id) => {
+      const { data } = await generalRequestsVoid('GET', `cards/${id}`, null, token, null);
+      setUserFavorites((prev) =>
+        !prev.some(({ _id }) => _id === data._id) ? [...prev, data] : [...prev]
+      );
     });
-    // eslint-disable-next-line
-  }, [getIdTokenClaims]);
+  };
+
+  useEffect(() => {
+    getUserFavorites();
+
+    setFilteredUserCards(getFilteredData(userCards, sortBy));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userCards, sortBy]);
   const handleProfilePage = (e) => {
     const value = e.target.getAttribute('data-id');
     setRenderPage(value);
@@ -118,7 +81,7 @@ function ProfilePage() {
     if (e.target.tagName === 'LI') {
       const value = e.target.getAttribute('data-id');
       setSortBy(value);
-      setUserCards(getFilteredData(data, value));
+      setFilteredUserCards(getFilteredData(userCards, value));
     }
   };
 
@@ -128,8 +91,11 @@ function ProfilePage() {
         <header className="container profile-header my-3">
           <div className="d-flex flex-column align-items-center text-center">
             <img src={profilePhoto} alt={fullName} className="rounded-circle" width="100" />
-            <div className="mt-3">
-              <h4>{userName}</h4>
+            <div className="d-flex align-items-center mt-3">
+              <h4>{fullName}</h4>
+              <Link to="./userInfo">
+                <EditOutlined className="ms-1 edit-btn" />
+              </Link>
             </div>
           </div>
         </header>
@@ -158,7 +124,7 @@ function ProfilePage() {
             <section className="py-3 text-center container">
               {renderPage === 'user-cards'
                 ? renderUserCards(
-                    userCards,
+                    filteredUserCards,
                     sortBy,
                     handleFilterValue,
                     showModal,
@@ -166,7 +132,13 @@ function ProfilePage() {
                     handleRemoveCards,
                     handleModalCancel
                   )
-                : renderUserFav(userFav, showModal, openModal, handleRemoveFav, handleModalCancel)}
+                : renderUserFav(
+                    userFavorites,
+                    showModal,
+                    openModal,
+                    handleModalCancel,
+                    handleRemoveFav
+                  )}
             </section>
           </div>
         </section>

@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { generalRequestsVoid } from './requestsServices';
 
-function useCard() {
+function useCard(id) {
   const [card, setCard] = useState(false);
   const [loadingCard, setLoadingCard] = useState(true);
   const [errorCard, setErrorCard] = useState(false);
-  const { id } = useParams();
-
   const reRenderCard = async (id) => {
     setLoadingCard(true);
     try {

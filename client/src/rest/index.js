@@ -10,6 +10,7 @@ import usePutForm from './usePutForm';
 import usePendingCards from './usePendingCards';
 import usePutPendingCards from './usePutPendingCards';
 import useDeleteCard from './useDeleteCard';
+import useUserCards from './useUserCards';
 
 export {
   useCardsCount,
@@ -24,4 +25,5 @@ export {
   usePendingCards,
   usePutPendingCards,
   useDeleteCard,
+  useUserCards,
 };
