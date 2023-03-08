@@ -2,6 +2,7 @@ import { Radio } from 'antd';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import { Input } from 'antd';
 import { useState } from 'react';
+import CloseIcon from 'components/icons/Close';
 
 const categoryOptions = [
   {
@@ -63,14 +64,25 @@ function ProductsFilter({ categoryValue, typeValue, onSearch }) {
   const handleChangeSearch = (e) => {
     setSearchValue(e.target.value);
     onSearch(e.target.value);
+    navigate({
+      search: `${createSearchParams({ category: categoryValue, type: typeValue })}`,
+    });
+  };
+
+  const handleReset = () => {
+    setSearchValue('');
+    onSearch('');
   };
 
   return (
     <div className="container">
       <div className="filter-bg row py-2 shadow-sm rounded" style={{ backgroundColor: '#F9F9F9' }}>
         <div className="col-xxl-4 col-xl-3 col-lg-12 row mb-2 mb-xl-0">
-          <div className="col-lg-12 col-xl-12 mt-3 mt-lg-0 d-flex align-items-center">
+          <div className="col-lg-12 col-xl-12 mt-3 mt-lg-0 d-flex align-items-center position-relative">
             <Input onChange={handleChangeSearch} value={searchValue} placeholder="Я шукаю..." />
+            <div role="button" className="position-absolute end-0 me-3" onClick={handleReset}>
+              <CloseIcon />
+            </div>
           </div>
         </div>
         <div className="col d-flex flex-wrap gap-xxl-5 gap-3">

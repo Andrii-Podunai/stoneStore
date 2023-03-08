@@ -2,7 +2,6 @@ import ProductForm from 'components/ProductForm';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Loader from 'components/Loader';
-
 import { useCard, usePutForm, useUserToken } from 'rest';
 
 function EditProductPage() {
