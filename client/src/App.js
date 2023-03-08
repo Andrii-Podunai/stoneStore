@@ -16,11 +16,12 @@ import Contacts from 'pages/Contacts';
 import PrivacyPolicy from 'pages/PrivacyPolicy';
 import ScrollWrapper from './components/ScrollWrapper';
 import ProtectedRouteAdmin from './pages/Admin/ProtectedRouteAdmin';
+import Loader from './components/Loader';
 
 function App() {
   const { isLoading } = useAuth0();
   if (isLoading === true) {
-    return <div>Loading...</div>;
+    return <Loader />;
   }
   return (
     <ScrollWrapper>
