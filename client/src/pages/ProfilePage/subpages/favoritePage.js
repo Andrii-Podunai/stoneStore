@@ -1,14 +1,14 @@
-import ModalComponent from '../../components/Modal';
+import ModalComponent from '../../../components/Modal';
 import { Link } from 'react-router-dom';
-import ProductCard from '../../components/ProductCard';
-import emptyImg from '../../images/emptyImage.png';
+import ProductCard from '../../../components/ProductCard';
+import emptyImg from '../../../images/emptyImage.png';
 
 export default function renderUserFav(
   favorite,
   showModal,
   openModal,
-  handleRemoveFav,
-  handleModalCancel
+  handleModalCancel,
+  handleRemoveFav
 ) {
   if (favorite.length === 0) {
     return (

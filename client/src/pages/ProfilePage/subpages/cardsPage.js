@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
-import ProductCard from '../../components/ProductCard';
-import emptyImg from '../../images/emptyImage.png';
-import ModalComponent from '../../components/Modal';
+import ProductCard from '../../../components/ProductCard';
+import emptyImg from '../../../images/emptyImage.png';
+import ModalComponent from '../../../components/Modal';
 
 export default function renderUserCards(
   cards,

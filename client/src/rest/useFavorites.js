@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { generalRequestsVoid } from './requestsServices';
 
 function useFavorites(token = false) {
-  const [favorites, setFavorites] = useState(false);
+  const [favorites, setFavorites] = useState([]);
   const [loadingFavorites, setLoadingFavorites] = useState(true);
   const [errorFavorites, setErrorFavorites] = useState(false);
 
@@ -34,7 +34,7 @@ function useFavorites(token = false) {
       reFetchFavorites(token);
     }
     // eslint-disable-next-line
-    }, [token]);
+  }, [token]);
 
   return { favorites, reFetchFavorites, loadingFavorites, errorFavorites };
 }

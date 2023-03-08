@@ -7,6 +7,7 @@ import Products from './pages/Products';
 import ProductPage from './pages/ProductPage';
 import CreateProductPage from 'pages/CreateProductPage/CreateProductPage';
 import ProfilePage from 'pages/ProfilePage/';
+import UserInfo from 'pages/ProfilePage/subpages/userInfoPage';
 import SuccessForm from 'pages/SuccessForm';
 import ProtectedRoute from 'components/ProtectedRoute';
 import EditProductPage from 'pages/EditProductPage';
@@ -35,6 +36,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile/userInfo"
+            element={
+              <ProtectedRoute>
+                <UserInfo />
               </ProtectedRoute>
             }
           />
