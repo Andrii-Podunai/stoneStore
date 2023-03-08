@@ -6,6 +6,7 @@ import ProductCard from 'components/ProductCard';
 import emptyImg from 'images/emptyImage.png';
 import { Link, useSearchParams } from 'react-router-dom';
 import ProductsFilter from './ProductsFilter';
+import Loader from '../../components/Loader';
 import { useUserToken, useFavorites, useCards, useCardsCount } from 'rest/index.js';
 
 function Products(): React.Node {
@@ -118,7 +119,7 @@ function Products(): React.Node {
         />
       </div>
       <div className="text-center mt-4 mb-4">
-        <div className="spinner-border" role="status"></div>
+        <Loader />
       </div>
       <Pagination
         current={currentPage}

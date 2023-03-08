@@ -1,3 +1,5 @@
+import '../../components/ProductComponent/style.scss';
+import Loader from '../../components/Loader';
 import ProductComponent from 'components/ProductComponent';
 import { useUserToken, useFavorites, useCard } from 'rest';
 import { useEffect, useState } from 'react';
@@ -17,11 +19,7 @@ function ProductPage() {
   }, [favorites, card]);
 
   if (loadingCard) {
-    return (
-      <div className="spinner-border" role="status">
-        <span className="sr-only"></span>
-      </div>
-    );
+    return <Loader />;
   }
 
   if (errorCard) {
