@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom';
 import ProductCard from '../../components/ProductCard';
 
 const dataMapper = (data, favorites, token) => {
+  if (data.length === 0) {
+    return <h3 className="text-center">За вашим запитом нічого не знайдено</h3>;
+  }
   return data.map(({ _id, price, images, category, title, currency, type }) => {
     const image = images.length > 0 && images[0].url ? images[0].url : emptyImg;
     let favorite = false;
