@@ -31,7 +31,7 @@ export default function UserInfo() {
     ...userInfo,
   };
   const submit = ({ given_name, family_name, phoneNumber }) => {
-    reFetchUserInfo('PATCH', token, {
+    reFetchUserInfo('POST', token, {
       given_name: given_name,
       family_name: family_name,
       phoneNumber: phoneNumber,
