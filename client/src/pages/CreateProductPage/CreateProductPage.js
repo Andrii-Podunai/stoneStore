@@ -10,6 +10,9 @@ function CreateProductPage() {
   const { reRenderPostForm, errorPostForm } = usePostForm();
   const { userInfo, loading } = useUserInformation();
 
+  if (loading) {
+    return <Loader />;
+  }
   const initialValues = {
     name: userInfo.given_name || '',
     title: '',
@@ -23,10 +26,6 @@ function CreateProductPage() {
     type: '',
     images: [],
   };
-
-  if (loading) {
-    return <Loader />;
-  }
 
   function submit(value) {
     reRenderPostForm(token, JSON.stringify(value)).then(() => {

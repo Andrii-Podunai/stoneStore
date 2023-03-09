@@ -14,22 +14,19 @@ function useUserInformation() {
     if (token) {
       setLoading(true);
       try {
-        await generalRequestsVoid(method, 'my/information', null, token, value).then(({ data }) => {
-          if (data.information) {
-            const userData = Array.isArray(data.information)
-              ? data.information[0]
-              : data.information;
+        const { data } = await generalRequestsVoid(method, 'my/information', null, token, value);
+        if (data.information) {
+          const userData = Array.isArray(data.information) ? data.information[0] : data.information;
 
-            setUserInfo({
-              given_name: userData.given_name,
-              family_name: userData.family_name,
-              phoneNumber: userData.phoneNumber.slice(2),
-              picture: user.picture,
-            });
-          } else {
-            throw new Error('Fetch Auth0 data');
-          }
-        });
+          setUserInfo({
+            given_name: userData.given_name,
+            family_name: userData.family_name,
+            phoneNumber: userData.phoneNumber,
+            picture: user.picture,
+          });
+        } else {
+          new Error('Fetch Auth0 data');
+        }
 
         setLoading(false);
       } catch (e) {
