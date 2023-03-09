@@ -14,7 +14,6 @@ function ProfilePage() {
   const { userInfo } = useUserInformation();
   const { given_name: name, picture: profilePhoto, family_name: surname } = userInfo;
   const fullName = name + ' ' + surname;
-
   const { userCards, reFetchCards } = useUserCards(token);
   const { reRenderDelCard } = useDeleteCard();
   const [filteredUserCards, setFilteredUserCards] = useState([]);
@@ -118,7 +117,7 @@ function ProfilePage() {
                   (renderPage === 'user-fav' ? 'text-success' : 'text-secondary')
                 }
                 data-id={'user-fav'}>
-                Ваші вибрані
+                Ваші обрані
               </li>
             </ul>
             <section className="py-3 text-center container">

@@ -1,25 +1,32 @@
 import ProductForm from '../../components/ProductForm';
 import { useNavigate } from 'react-router-dom';
 import { usePostForm, useUserToken } from 'rest';
-
-const initialValues = {
-  name: '',
-  title: '',
-  description: '',
-  price: 0,
-  count: 0,
-  category: '',
-  phoneNumber: '+38 (___) ___ __ __',
-  location: '',
-  currency: 'UAH',
-  type: '',
-  images: [],
-};
+import useUserInformation from '../../rest/useUserInformation';
+import Loader from 'components/Loader';
 
 function CreateProductPage() {
   const navigate = useNavigate();
   const [token] = useUserToken();
   const { reRenderPostForm, errorPostForm } = usePostForm();
+  const { userInfo, loading } = useUserInformation();
+
+  const initialValues = {
+    name: userInfo.given_name || '',
+    title: '',
+    description: '',
+    price: 0,
+    count: 0,
+    category: '',
+    phoneNumber: userInfo.phoneNumber || '+38 (___) ___ __ __',
+    location: '',
+    currency: 'UAH',
+    type: '',
+    images: [],
+  };
+
+  if (loading) {
+    return <Loader />;
+  }
 
   function submit(value) {
     reRenderPostForm(token, JSON.stringify(value)).then(() => {

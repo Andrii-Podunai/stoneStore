@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { generalRequestsVoid } from './requestsServices';
+import { useUserToken } from './index';
 
-function useUserCards(token) {
+function useUserCards() {
+  const [token] = useUserToken();
+
   const [userCards, setUserCards] = useState([]);
   const [loadingCards, setLoadingCards] = useState(true);
   const [errorCards, setErrorCards] = useState(false);
