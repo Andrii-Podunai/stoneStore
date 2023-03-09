@@ -1,27 +1,53 @@
 import { useEffect, useState } from 'react';
 import { generalRequestsVoid } from './requestsServices';
 import { useUserToken } from './index';
+import { useAuth0 } from '@auth0/auth0-react';
 
 function useUserInformation() {
   const [token] = useUserToken();
+  const { user } = useAuth0();
   const [userInfo, setUserInfo] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   const reFetchUserInfo = async (method, token, value = null) => {
-    setLoading(true);
-    try {
-      const { data } = await generalRequestsVoid(method, 'my/information', null, token, value);
-      setUserInfo(data.information);
-      setLoading(false);
-    } catch (e) {
-      console.log(e.message);
-      setError(e);
-      setLoading(false);
+    if (token) {
+      setLoading(true);
+      try {
+        await generalRequestsVoid(method, 'my/information', null, token, value).then(({ data }) => {
+          if (data.information) {
+            const userData = Array.isArray(data.information)
+              ? data.information[0]
+              : data.information;
+
+            setUserInfo({
+              given_name: userData.given_name,
+              family_name: userData.family_name,
+              phoneNumber: userData.phoneNumber.slice(2),
+              picture: user.picture,
+            });
+          } else {
+            throw new Error('Fetch Auth0 data');
+          }
+        });
+
+        setLoading(false);
+      } catch (e) {
+        setUserInfo({
+          given_name: user.given_name,
+          family_name: user.family_name,
+          phoneNumber: '',
+          picture: user.picture,
+        });
+        console.log(e.message);
+        setError(e);
+        setLoading(false);
+      }
     }
   };
   useEffect(() => {
     reFetchUserInfo('GET', token);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   return { userInfo, reFetchUserInfo, loading, error };

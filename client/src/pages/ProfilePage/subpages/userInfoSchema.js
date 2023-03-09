@@ -21,7 +21,7 @@ const schema = yup.object().shape({
     .required('Ім`я відіграє важливу роль, не забудьте додати його'),
   phoneNumber: yup
     .string()
-    .customMinNumber(12, 'Введіть корректний номер')
+    .customMinNumber(10, 'Номер телефону має бути 12 цифр')
     .typeError('Введіть корректний номер')
     .required('Необхідно вказати номер телефону'),
 });

@@ -18,12 +18,12 @@ yup.addMethod(yup.string, 'customMinNumber', function (...props) {
 const schema = yup.object().shape({
   name: yup
     .string()
-    .matches(/^[aA-zZ]+$/, 'Правильне ім`я?')
+    .matches(/^[aA-zZаА-яЯ]+$/, 'Правильне ім`я?')
     .min(3, 'Правильне ім`я?')
     .required('Ім`я відіграє важливу роль, не забудьте додати його'),
   title: yup
     .string()
-    .min(7, 'У заголовку має бути не менше 7 символів')
+    .min(5, 'У заголовку має бути не менше 7 символів')
     .required('Заголовок відіграє важливу роль, не забудьте додати його'),
   description: yup
     .string()
@@ -32,7 +32,7 @@ const schema = yup.object().shape({
   phoneNumber: yup
     .string()
     .typeError('Введіть корректний номер')
-    .customMinNumber(12, 'Введіть корректний номер')
+    .customMinNumber(10, 'Введіть корректний номер')
     .required('Необхідно вказати номер телефону'),
   price: yup
     .number('Неправильно вказана ціна. Відредагуйте поле')

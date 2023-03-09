@@ -3,13 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Loader from 'components/Loader';
 import { useCard, usePutForm, useUserToken } from 'rest';
+import { useParams } from 'react-router-dom';
 
 function EditProductPage() {
   const [initialValues, setInitialValues] = useState({});
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const [token] = useUserToken();
-  const { card } = useCard();
+  const { id } = useParams();
+  const { card } = useCard(id);
   const { reRenderPutForm, errorPutForm } = usePutForm();
 
   useEffect(() => {
@@ -23,7 +25,7 @@ function EditProductPage() {
       price: card.price,
       count: card.count,
       category: card.category,
-      phoneNumber: card.phoneNumber,
+      phoneNumber: card.phoneNumber.startsWith('38') ? card.phoneNumber.slice(2) : card.phoneNumber,
       location: card.location,
       currency: card.currency,
       type: card.type,

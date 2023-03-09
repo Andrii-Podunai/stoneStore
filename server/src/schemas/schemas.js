@@ -37,7 +37,7 @@ const Card = {
       enum: ['paper', 'plastic', 'glass', 'metal'],
     },
     phoneNumber: {
-      type: 'number',
+      type: 'string',
       maxLength: 12,
       minimum: 10,
     },
