@@ -33,7 +33,6 @@ function Header() {
                   width="45"
                 />
               </Link>
-
               <button onClick={logout} type="button" className="btn btn-outline-success">
                 Вийти
               </button>

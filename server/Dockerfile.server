@@ -1,0 +1,23 @@
+# Використання офіційного образу Node.js
+FROM node:18-alpine
+
+# Встановлення curl та mongosh
+RUN apk add --no-cache curl \
+    && apk add --no-cache mongodb-tools
+
+# Встановлення робочого каталогу
+WORKDIR /app
+
+# Копіювання package.json та встановлення залежностей
+COPY package.json ./
+COPY package-lock.json ./
+RUN npm install
+
+# Копіювання решти коду програми
+COPY . .
+
+# Відкриття порту
+EXPOSE 8085
+
+# Запуск сервера
+CMD ["npm", "run", "dev"]

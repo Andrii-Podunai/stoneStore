@@ -7,6 +7,9 @@ import myCardsRoute from './routes/my/index.js';
 import cardsRoutes from './routes/cards/index.js';
 import uploadRoutes from './routes/upload/index.js';
 import fastifyAuth0Verify from 'fastify-auth0-verify';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = fastify();
 

@@ -7,7 +7,7 @@ function Footer() {
     <footer className="Footer navbar d-flex flex-column justify-content-center">
       <div className="Footer-container py-2 container d-flex flex-column justify-content-center text-center align-items-center flex-lg-row justify-content-lg-between">
         <Link to="/" className="navbar-brand m-0">
-          <img src={logo} alt="VtorMall" className="card-img" style={{ width: '280px' }} />
+          <img src={logo} alt="Stone" className="card-img" style={{ width: '280px' }} />
         </Link>
         <div className="d-flex flex-column  flex-lg-row justify-content-lg-between">
           <Link to="/about" className="m-0 d-flex justify-content-start px-3">
@@ -21,7 +21,7 @@ function Footer() {
           </Link>
         </div>
       </div>
-      <h6 className="m-2 px-3"> © 2023 Copyright VtorMall. All rights reserved.</h6>
+      <h6 className="m-2 px-3"> © 2023 Copyright Stone. All rights reserved.</h6>
     </footer>
   );
 }

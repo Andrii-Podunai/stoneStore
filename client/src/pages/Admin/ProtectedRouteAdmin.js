@@ -6,8 +6,11 @@ function ProtectedRouteAdmin({ children }) {
   if (isAuthenticated === false) {
     loginWithRedirect();
   }
+  // if (user.sub === process.env.REACT_APP_ADMIN) {
+  //   return children;
+  // }
 
-  if (user.sub === process.env.REACT_APP_ADMIN) {
+  if (user.sub === 'auth0|645e34c53d813747ca256bc1') {
     return children;
   }
 

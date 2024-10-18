@@ -36,11 +36,11 @@ const Contacts = () => {
                 style={{ fontSize: '20px', color: 'green', transform: 'rotate(100deg)' }}
               />
               <p>
-                <strong>Телефон: </strong>+38 (078) 667 776 887
+                <strong>Телефон: </strong>+38 (097) 172 63 54
               </p>
               <MailOutlined style={{ fontSize: '20px', color: 'green' }} />
               <p>
-                <strong>E-mail: </strong>contact@vtormall.com
+                <strong>E-mail: </strong>contact@Stone.com
               </p>
               <EnvironmentOutlined style={{ fontSize: '20px', color: 'green' }} />
               <p>
@@ -54,7 +54,7 @@ const Contacts = () => {
               <p>
                 <strong>Слідкуйте за нами в соціальних мережах: </strong>
               </p>
-              <a href="https://www.facebook.com/VtorMall">
+              <a href="https://www.facebook.com/">
                 <FacebookOutlined
                   style={{
                     fontSize: '35px',

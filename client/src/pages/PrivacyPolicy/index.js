@@ -59,9 +59,9 @@ function Privacy() {
         відвідування сторінки).
       </p>
       <p>
-        <strong>Веб-сайт</strong> відноситься до Vtormall, доступний з{' '}
-        <a href="https://vtormall.com/" rel="external nofollow noopener noreferrer" target="_blank">
-          https://vtormall.com/
+        <strong>Веб-сайт</strong> відноситься до Stone, доступний з{' '}
+        <a href="https://Stone.com/" rel="external nofollow noopener noreferrer" target="_blank">
+          https://Stone.com/
         </a>
       </p>
       <p>
@@ -383,7 +383,7 @@ function Privacy() {
         Якщо у вас виникли запитання щодо цієї Політики конфіденційності, ви можете зв’язатися з
         нами:
       </p>
-      <p>Електронною поштою: contact@vtormall.com</p>
+      <p>Електронною поштою: contact@Stone.com</p>
     </div>
   );
 }

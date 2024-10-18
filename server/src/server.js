@@ -9,6 +9,8 @@ dotenv.config({ path: '../.env' });
 const PORT = process.env.PORT || LOCAL_PORT;
 const HOST = process.env.HOST || LOCAL_HOST;
 
+console.log('HOST', HOST, 'PORT', PORT);
+
 app.listen({ port: PORT, host: HOST }, (error, address) => {
   if (error) {
     app.log.error(error);

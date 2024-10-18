@@ -4,7 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "start": "node src/server.js",
+    "start-db": "brew services start mongodb/brew/mongodb-community",
+    "start_without_bd": "node src/server.js",
+    "start": "npm run start-db && node src/server.js",
     "dev": "nodemon -r dotenv/config src/server.js"
   },
   "dependencies": {
@@ -18,7 +20,8 @@
     "fastify-auth0-verify": "^1.0.0",
     "mongodb": "^4.13.0",
     "nanoid": "^4.0.0",
-    "pump": "^3.0.0"
+    "pump": "^3.0.0",
+    "punycode": "^2.3.1"
   },
   "devDependencies": {
     "dotenv": "^16.0.3",
