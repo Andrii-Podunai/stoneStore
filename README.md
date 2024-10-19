@@ -1,4 +1,6 @@
-# fe_3_final_project
+# StoneStore
+
+Rules for API
 
 !!!!!!!
 all inputs are required and keep the typing as in the example
